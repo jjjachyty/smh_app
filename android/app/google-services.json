@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "1082938957618",
+    "firebase_url": "https://smhmovie-52105.firebaseio.com",
+    "project_id": "smhmovie-52105",
+    "storage_bucket": "smhmovie-52105.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082938957618:android:cbac498c8a1775ba23412b",
+        "android_client_info": {
+          "package_name": "com.janly.smh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082938957618-v9fn0dvgkr5vk7030qs1i25a37p2tola.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDD2FMc_9EgFeBz5LE1M4neF5o3mO7XzZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082938957618-v9fn0dvgkr5vk7030qs1i25a37p2tola.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-4849347031921234~6752835093"
+    }
+  ],
+  "configuration_version": "1"
+}
