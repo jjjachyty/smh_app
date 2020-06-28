@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smh/common/init.dart';
+import 'package:path_provider/path_provider.dart';
 
 SharedPreferences prefs;
 
@@ -55,4 +57,11 @@ bool checkHasVIP() {
     return true;
   }
   return false;
+}
+
+Future<String> findLocalPath() async {
+  final directory = Platform.isAndroid
+      ? await getExternalStorageDirectory()
+      : await getApplicationDocumentsDirectory();
+  return directory.path;
 }

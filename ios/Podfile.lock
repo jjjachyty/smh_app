@@ -1,9 +1,9 @@
 PODS:
+  - BIJKPlayer (0.7.3)
   - device_info (0.0.1):
     - Flutter
-  - FIJKPlayer (0.5.0)
-  - fijkplayer (0.6.2):
-    - FIJKPlayer (~> 0.5.0)
+  - fijkplayer (0.8.4):
+    - BIJKPlayer (~> 0.7.3)
     - Flutter
   - Firebase/AdMob (6.20.0):
     - Firebase/CoreOnly
@@ -156,7 +156,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - FIJKPlayer
+    - BIJKPlayer
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -225,9 +225,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
+  BIJKPlayer: 1ecf2e48a182e2e4618d47a01d04814ee4126c96
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
-  FIJKPlayer: 70d186d12e533e3d576a9b3fbafa9e462b0d911a
-  fijkplayer: df74008d2937c092aba6a7d56d24186b328edd82
+  fijkplayer: df94cc554363066892cd2a6b1d94aaf9077fcb64
   Firebase: fe7f74012742ab403451dd283e6909b8f1fb348a
   firebase_admob: d8c2bc95b5e0069406280ce6adb816cdee6aa595
   firebase_core: 0d8be0e0d14c4902953aeb5ac5d7316d1fe4b978

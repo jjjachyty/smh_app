@@ -23,12 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    init().then((onValue) {
-      interstitialAd
-        ..load().then((onValue) {
-          interstitialAd.show();
-        });
-    });
+    init();
 
     super.initState();
   }

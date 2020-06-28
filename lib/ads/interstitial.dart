@@ -24,7 +24,7 @@ InterstitialAd createInterstitialAd() {
 }
 
 Future<void> rewardedVideoAd() async {
-  return await RewardedVideoAd.instance.load(
+  return RewardedVideoAd.instance.load(
       adUnitId: "ca-app-pub-4849347031921234/4195255833",
       targetingInfo: targetingInfo);
 }

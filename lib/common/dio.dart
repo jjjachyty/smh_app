@@ -99,7 +99,10 @@ Future<String> refreshToken(String token) async {
 initDio() {
   api = new dio.Dio(dio.BaseOptions(baseUrl: host, connectTimeout: 5000,
       // receiveTimeout: 5000,
-      headers: {HttpHeaders.authorizationHeader: token}));
+      headers: {
+        HttpHeaders.authorizationHeader: token,
+        "platform": Platform.operatingSystem
+      }));
 
   api.interceptors
       .add(dio.InterceptorsWrapper(onResponse: (dio.Response response) async {

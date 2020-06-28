@@ -125,8 +125,8 @@ Future<Response> serach(String key) async {
 Future<Response> userCreate(int offset, int userid) async {
   var path = "/user/moviecreate";
 
-  var resp =
-      await get(path, parameters: {"offset": (offset * 15), "userid": userid});
+  var resp = await get(path,
+      parameters: {"offset": (offset * 15), "CreateBy": userid});
   if (resp.State) {
     resp.Data = toList(resp.Data);
   }

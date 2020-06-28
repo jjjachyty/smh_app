@@ -113,24 +113,75 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
         //   },
         // ),
         new ListTile(
-          leading: Text('VIP'),
-          title: Text(
-            "到期时间" +
-                formatDate(DateTime.parse(currentUser.VIPEndTime).toLocal(),
-                    [yyyy, "/", mm, "/", dd, " ", HH, ":", nn, ":", ss]),
-            style: TextStyle(color: Colors.grey, fontSize: 10),
-          ),
-          trailing: Text(
-            "续签",
-            style: TextStyle(color: Colors.red),
-          ),
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => GetVIPPage()));
-          },
-        ),
+            leading: Text('VIP'),
+            title: Text(
+              "到期时间" +
+                  formatDate(DateTime.parse(currentUser.VIPEndTime).toLocal(),
+                      [yyyy, "/", mm, "/", dd, " ", HH, ":", nn, ":", ss]),
+              style: TextStyle(color: Colors.grey, fontSize: 10),
+            ),
+            trailing: Text(
+              "看广告续签",
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () async {
+              rewardedVideoAd();
+              RewardedVideoAd.instance.show().catchError((onError) {
+                Fluttertoast.showToast(
+                    msg: "广告加载失败,请重试",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    timeInSecForIos: 2,
+                    fontSize: 16.0);
+              });
+              RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
+                  {String rewardType, int rewardAmount}) async {
+                switch (event) {
+                  case RewardedVideoAdEvent.loaded:
+                    // RewardedVideoAd.instance.show();
+                    break;
+                  case RewardedVideoAdEvent.failedToLoad:
+                    Fluttertoast.showToast(
+                        msg: "广告加载失败,请联系管理员",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        timeInSecForIos: 2,
+                        fontSize: 16.0);
+                    //读取失败！
+                    break;
+                  case RewardedVideoAdEvent.opened:
+                    break;
+                  case RewardedVideoAdEvent.leftApplication:
+                    break;
+                  case RewardedVideoAdEvent.closed:
+                    // Fluttertoast.showToast(
+                    //     msg: "广告未看完,自动放弃获取VIP",
+                    //     toastLength: Toast.LENGTH_SHORT,
+                    //     gravity: ToastGravity.CENTER,
+                    //     backgroundColor: Colors.red,
+                    //     textColor: Colors.white,
+                    //     timeInSecForIos: 2,
+                    //     fontSize: 16.0);
+                    rewardedVideoAd();
+                    break;
+                  case RewardedVideoAdEvent.rewarded:
+                    // print("*********奖励 $rewardAmount");
+                    await getVIP();
+                    eventBus.fire(UserChangeEvent);
+
+                    break;
+                  case RewardedVideoAdEvent.started:
+                    break;
+                  case RewardedVideoAdEvent.completed:
+                    print("*********播放结束");
+                    break;
+                }
+              };
+            }),
         new Divider(),
         new ListTile(
           title: new Text('我关注的人'),

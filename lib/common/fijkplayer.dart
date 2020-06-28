@@ -4,27 +4,43 @@ import 'package:fijkplayer/fijkplayer.dart';
 
 import 'package:flutter/material.dart';
 import 'package:smh/common/init.dart';
+import 'package:smh/common/utils.dart';
 import 'package:smh/models/video.dart';
 import 'package:smh/models/resources.dart';
 import 'package:smh/models/watch_history.dart';
 
+import 'fijkplayer_panle.dart';
+
 class FijkPlayPage extends StatefulWidget {
   Video movie;
   VideoResources resources;
+  FijkPlayer player;
 
-  FijkPlayPage(this.movie, this.resources);
+  FijkPlayPage(this.movie, this.resources, this.player);
   @override
   _FijkPlayPageState createState() => _FijkPlayPageState();
 }
 
 class _FijkPlayPageState extends State<FijkPlayPage> {
-  double _height = 250;
-  final FijkPlayer player = FijkPlayer();
-
+  double _height = 300;
+  // FijkPlayer player = FijkPlayer();
+  int playEvent;
   @override
   void initState() {
+    widget.player.setOption(FijkOption.hostCategory, "request-screen-on", 1);
+    widget.player.setOption(FijkOption.formatCategory, "parse_cache_map", 1);
+    widget.player.setOption(FijkOption.formatCategory, "auto_save_map", 1);
+
+    widget.player.setOption(FijkOption.formatCategory, "cache_file_path",
+        localPath + "/tmp/" + widget.player.id.toString());
+    widget.player.setOption(FijkOption.formatCategory, "cache_map_path",
+        localPath + "/tmp/" + widget.player.id.toString() + "_map");
+
+    //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_file_path",“/storage/emulated/0/1.tmp");每首歌的临时文件名自己根据自己需要生成就行了。
+    //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_map_path",“/storage/emulated/0/2.tmp"");//暂时不知道设置有什么用
+
     _playInput();
-    player.onCurrentPosUpdate.listen((v) {
+    widget.player.onCurrentPosUpdate.listen((v) {
       if (v.inSeconds % 30 == 0) {
         //30S更新一次
         var history = WatchingHistory(
@@ -33,7 +49,7 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
           VideoName: widget.movie.Name,
           ResourcesID: widget.resources.ID,
           ResourcesName: widget.resources.Name,
-          VideoDuration: player.value.duration.inMinutes.toDouble(),
+          VideoDuration: widget.player.value.duration.inMinutes.toDouble(),
           Progress: v.inSeconds.toDouble(),
           VideoThumbnail: widget.movie.Cover,
         );
@@ -44,9 +60,9 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
 
   @override
   void dispose() {
-    // player.removeListener(_fijkValueListener);
+    // widget.player.removeListener(_fijkValueListener);
 
-    player.release();
+    // widget.player.release();
 
     super.dispose();
   }
@@ -55,11 +71,36 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
   Widget build(BuildContext context) {
     return Container(
       height: _height,
-      child: FijkView(
-        fit: FijkFit.cover,
-        color: Colors.black,
-        // fsFit: FijkFit.fill,
-        player: player,
+      child: GestureDetector(
+        child: FijkView(
+          fit: FijkFit.cover,
+          color: Colors.black,
+          // fsFit: FijkFit.fill,
+          player: widget.player,
+          panelBuilder: (player, playerData, context, size, rect) {
+            return FijkPanelBuilder(player, playerData, context, size, rect);
+          },
+        ),
+        onLongPress: () {
+          widget.player.setSpeed(2.0);
+        },
+        onLongPressEnd: (e) {
+          widget.player.setSpeed(1.0);
+        },
+        onHorizontalDragEnd: (e) async {
+          print("primaryVelocity ${e.primaryVelocity}");
+          var current = widget.player.currentPos.inMilliseconds;
+
+          if (e.primaryVelocity > 0) {
+            widget.player
+                .seekTo(current + Duration(seconds: 30).inMilliseconds);
+          } else {
+            var to = current - Duration(seconds: 30).inMilliseconds;
+            print("${current}----${to}---${current - to}");
+
+            widget.player.seekTo(to);
+          }
+        },
       ),
     );
   }
@@ -71,27 +112,28 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
       VideoName: widget.movie.Name,
       ResourcesID: widget.resources.ID,
       ResourcesName: widget.resources.Name,
-      VideoDuration: player.value.duration.inMinutes.toDouble(),
+      VideoDuration: widget.player.value.duration.inMinutes.toDouble(),
       VideoThumbnail: widget.movie.Cover,
     );
     var resp = await getResourceWatch(history);
     if (resp.State) {
       var _result = WatchingHistory.fromJson(resp.Data);
       if (_result.Progress > 0) {
-        player.seekTo((_result.Progress * 1000).toInt());
+        widget.player.seekTo((_result.Progress * 1000).toInt());
       }
     }
   }
 
   void _playInput() async {
     print(widget.resources.URL);
-    await player.setDataSource(
-      widget.resources.URL,
-      autoPlay: true,
-      showCover: true,
-    );
+    // await widget.player.setDataSource(
+    //   widget.resources.URL,
+    //   autoPlay: true,
+    //   showCover: true,
+    // );
 
-    await player.setOption(FijkOption.hostCategory, "request-screen-on", 1);
+    await widget.player
+        .setOption(FijkOption.hostCategory, "request-screen-on", 1);
 
     if (widget.movie.ID == null || widget.movie.ID == "") {
       widget.movie.CreateBy = currentUser != null ? currentUser.ID : "";

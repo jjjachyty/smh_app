@@ -94,7 +94,7 @@ Future<Response> watchingList() async {
 Future<Response> getResourceWatchs(int offset, int userid) async {
   var path = "/video/watchs?offset=" +
       (offset * 15).toString() +
-      "&userid=" +
+      "&UserID=" +
       userid.toString();
 
   var resp = await get(path);

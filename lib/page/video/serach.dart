@@ -1,3 +1,4 @@
+import 'package:date_format/date_format.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:smh/models/video.dart';
@@ -71,8 +72,26 @@ class SearchBarDelegate extends SearchDelegate<String> {
                       videos[index].Name,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    trailing: Text(videos[index].ScoreDB.toString() + "分",
-                        style: TextStyle(color: Colors.yellow.shade900)),
+                    trailing: Text(
+                        formatDate(
+                                DateTime.parse(videos[index].CreateAt)
+                                    .toLocal(),
+                                [
+                                  yyyy,
+                                  "/",
+                                  mm,
+                                  "/",
+                                  dd,
+                                  " ",
+                                  HH,
+                                  ":",
+                                  nn,
+                                  ":",
+                                  ss
+                                ]) +
+                            "有人看过",
+                        style: TextStyle(
+                            color: Colors.yellow.shade900, fontSize: 10)),
                   ));
         } else {
           return Text("data");

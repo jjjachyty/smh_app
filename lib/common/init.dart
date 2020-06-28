@@ -10,14 +10,14 @@ import 'package:smh/models/user.dart';
 import 'package:smh/models/version.dart';
 
 User currentUser;
-var currentVersion = "0.0.8"; //当前版本
-Version newestVersion = new Version(VersionCode: "0.0.8"); //最新版本
+var currentVersion = "0.1.0"; //当前版本
+Version newestVersion = new Version(VersionCode: "0.1.0"); //最新版本
 
 String token;
 DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 AndroidDeviceInfo androidInfo;
 String testDevice;
-
+String localPath = "";
 InterstitialAd interstitialAd;
 
 RegExp phoneExp = RegExp(
@@ -30,9 +30,10 @@ Future<void> init() async {
   await getUser();
   token = await getStorageString("_token");
   initDio();
-  print("Platform.operatingSystem=${Platform.operatingSystem}");
+  localPath = await findLocalPath();
   await getVersion(Platform.operatingSystem);
-  FirebaseAdMob.instance.initialize(appId: FirebaseAdMob.testAppId);
+  FirebaseAdMob.instance
+      .initialize(appId: "ca-app-pub-4849347031921234~6752835093");
   if (Platform.isIOS) {
     testDevice = (await deviceInfo.iosInfo).identifierForVendor;
   } else {

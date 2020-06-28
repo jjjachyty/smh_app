@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fijkplayer/fijkplayer.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
@@ -40,6 +41,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
   int currentIndex;
   List<VideoResources> resources;
   User creater;
+  FijkPlayer player = new FijkPlayer();
   bool canView = false;
 
   Player _player1 = new Player(
@@ -51,6 +53,9 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
 
   void _listener() {
     eventBus.on<PlayMoieEvent>().listen((event) {
+      setState(() {
+        playResources = null;
+      });
       setState(() {
         playResources = event.resources;
         playResources.VideoThumbnail = widget.movie.Cover;
@@ -128,11 +133,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                     return UserProfilePage(creater);
                   }));
                 },
-                child: (creater != null && creater.Avatar != "")
-                    ? CircleAvatar(
-                        backgroundImage: AssetImage(creater.Avatar),
-                      )
-                    : Text(""),
+                child: CircleAvatar(
+                  backgroundImage: AssetImage(creater != null
+                      ? creater.Avatar
+                      : "images/avatar/hanweizhelianmeng-yemoxia.png"),
+                ),
               ),
             )
           ],
@@ -213,38 +218,44 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
     // flutterWebviewPlugin.close();
     // flutterWebviewPlugin.dispose();
     // TODO: implement dispose
+    player.release();
+    // player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
-          widget.movie.Name,
+          widget.movie.Name + (playResources == null ? "" : playResources.Name),
         ),
+        backgroundColor: playResources != null ? Colors.black : Colors.red,
       ),
-      body: SingleChildScrollView(
+      backgroundColor: Colors.grey.shade100,
+      body: SafeArea(
+          child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
-              // height: 300,
+              height: 300,
               child: playResources != null
-                  ? FijkPlayPage(widget.movie,
-                      playResources) //PlayPage(widget.movie, playResources)
+                  ? FijkPlayPage(widget.movie, playResources,
+                      player) //PlayPage(widget.movie, playResources)
                   : _profile(),
             ),
             Divider(),
             playResources != null && playResources.URL.contains(".m3u8")
                 ? Container(
-                    height: 20,
+                    height: 30,
                     child: Row(
                       children: <Widget>[
-                        Text(
-                          "第三方支持",
-                          style: TextStyle(fontSize: 8),
-                        ),
+                        FlatButton(
+                            onPressed: null,
+                            child: Text(
+                              "云播/投屏",
+                              style: TextStyle(fontSize: 12),
+                            )),
                         OutlineButton(
                             color: Colors.white,
                             child: Text(
@@ -252,6 +263,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () async {
+                              player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
                               Navigator.push(context,
@@ -271,6 +283,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () async {
+                              player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
                               Navigator.push(context,
@@ -290,6 +303,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                               style: TextStyle(color: Colors.red),
                             ),
                             onPressed: () async {
+                              player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
                               Navigator.push(context,
@@ -301,10 +315,12 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                                 playResources = null;
                               });
                             }),
+                        Divider()
                       ],
                     ),
                   )
                 : Text(""),
+            Divider(),
             Container(
                 height: 100,
                 child: canView
@@ -338,9 +354,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                                       setState(() {
                                         currentIndex = i;
                                       });
-                                      rewardedVideoAd().then((onValue) {
-                                        RewardedVideoAd.instance.show();
-                                      });
+                                      // rewardedVideoAd().then((onValue) {
+                                      //   RewardedVideoAd.instance.show();
+                                      // });
+                                      interstitialAd.load();
+                                      interstitialAd.show();
 
                                       //判断有没有登录
                                       if (currentUser == null) {
@@ -363,6 +381,15 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                                       }
 
                                       if (_tmp.URL.contains(".m3u8")) {
+                                        if (player.state == FijkState.end) {
+                                          player = FijkPlayer();
+                                        }
+                                        if (player.state == FijkState.started) {
+                                          await player.reset();
+                                        }
+
+                                        player.setDataSource(_tmp.URL,
+                                            autoPlay: true, showCover: true);
                                         setState(() {
                                           playResources = _tmp;
                                         });
@@ -397,16 +424,16 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                                         }
                                       }
 
-                                      //如果资源ID 为空 则新增资源
+                                      //��果资源ID 为空 则新增资源
                                       if (_tmp.ID == null) {
-                                        _tmp.VideoID = _movieTmp.ID;
-                                        _tmp.VideoThumbnail = _movieTmp.Cover;
                                         var _resResp = await addResources(_tmp);
                                         if (_resResp.State) {
                                           _tmp = VideoResources.fromJson(
                                               _resResp.Data);
                                         }
                                         setState(() {
+                                          _tmp.VideoID = _movieTmp.ID;
+                                          _tmp.VideoThumbnail = _movieTmp.Cover;
                                           resources[i] = _tmp;
                                         });
                                       }
@@ -445,12 +472,12 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                         style: TextStyle(color: Colors.red),
                       )),
             Container(
-              height: 300,
+              height: 250,
               child: VideoCommentPage(widget.movie),
             ),
           ],
         ),
-      ),
+      )),
     );
   }
 }
