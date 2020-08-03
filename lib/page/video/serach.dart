@@ -6,6 +6,8 @@ import 'package:smh/models/spiders/diaosidao.dart';
 import 'package:smh/page/video/apply.dart';
 import 'package:smh/page/video/profile.dart';
 
+import '../../common/event_bus.dart';
+import '../../common/init.dart';
 import 'serach_result.dart';
 
 class SearchBarDelegate extends SearchDelegate<String> {
@@ -24,6 +26,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
       IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
+         
           query = "";
           showSuggestions(context);
         },

@@ -25,9 +25,9 @@ request_data(String url) async {
 }
 
 // 数据的解析
-Future<List<Video>> dsdSerach(String key) async {
+Future<List<Video>> dsdSerach(String key,int page) async {
   List<Video> videos = new List();
-  var url = "https://www.diaosidao.net/search.php?searchword=" + key;
+  var url = "https://www.diaosidao.net/search.php?page="+page.toString()+"&searchword=" + key;
 
   var html = await request_data(url);
   Document document = parse(html);

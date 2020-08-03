@@ -19,6 +19,11 @@ class SerachResultPage extends StatefulWidget {
 
 class _SerachResultPageState extends State<SerachResultPage> {
   List<Video> videos;
+  ScrollController _scrollController = ScrollController(); //listview的控制器
+  int _page = 1; //加载的页数
+  bool isLoading = false; //是否正在加载数据
+  bool _nodata = false;
+
   bool appalyFlag = false;
 
   Widget _item(Video movie) {
@@ -80,15 +85,45 @@ class _SerachResultPageState extends State<SerachResultPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    serach(widget.keyWords).then((resp) async {
+    _getMore();
+
+    _scrollController.addListener(() {
+      if (!_nodata &&
+          _scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent) {
+        setState(() {
+          _page++;
+        });
+        _getMore();
+      }
+    });
+
+    super.initState();
+  }
+
+  _getMore() {
+    setState(() {
+      _nodata = false;
+      isLoading = true;
+    });
+// TODO: implement initState
+    serach(widget.keyWords, _page).then((resp) async {
       if (resp.State) {
         setState(() {
-          videos = resp.Data;
+          isLoading= false;
+          if (videos == null) {
+            videos = resp.Data;
+            return;
+          }
+          if (resp.Data != null && resp.Data.length != 0) {
+            videos.addAll(resp.Data);
+            if (resp.Data.length < 7) {
+              _nodata = true;
+            }
+          }
         });
       }
     });
-    super.initState();
   }
 
   @override
@@ -115,39 +150,11 @@ class _SerachResultPageState extends State<SerachResultPage> {
     if (videos.length > 0) {
       return Column(
         children: <Widget>[
-          // Container(
-          //   padding: EdgeInsets.all(8),
-          //   child: Text.rich(TextSpan(text: "没有想要的?,你可以", children: [
-          //     TextSpan(
-          //         text: "  点我",
-          //         style: TextStyle(color: Colors.blue),
-          //         recognizer: TapGestureRecognizer()
-          //           ..onTap = () async {
-          //             setState(() {
-          //               serachFlag = true;
-          //             });
-
-          //             var _result = await dsdSerach(widget.keyWords);
-          //             if (_result.length > 0) {
-          //               setState(() {
-          //                 serachFlag = false;
-
-          //                 videos = _result;
-          //               });
-          //             } else {
-          //               setState(() {
-          //                 serachFlag = false;
-
-          //                 appalyFlag = true;
-          //               });
-          //             }
-          //           }),
-          //   ])),
-          // ),
           Expanded(
               child: ListView.separated(
             separatorBuilder: (context, i) => Divider(),
             itemCount: videos.length,
+            controller: _scrollController,
             itemBuilder: (context, index) {
               return GestureDetector(
                 child: _item(videos[index]),
@@ -167,40 +174,16 @@ class _SerachResultPageState extends State<SerachResultPage> {
               );
             },
           )),
+          _nodata
+              ? Text(
+                  "已全部加载",
+                  style: TextStyle(color: Colors.grey),
+                )
+              : isLoading?Text("加载中...."):Text("")
         ],
       );
     } else {
       return Text("搜索中....");
     }
-    // else {
-    //   return Center(
-    //     child: Text.rich(TextSpan(text: "我还未搜录相关电影,你可以", children: [
-    //       TextSpan(
-    //           text: "  点我",
-    //           style: TextStyle(color: Colors.blue),
-    //           recognizer: TapGestureRecognizer()
-    //             ..onTap = () async {
-    //               setState(() {
-    //                 serachFlag = true;
-    //               });
-
-    //               var _result = await dsdSerach(widget.keyWords);
-    //               if (_result.length > 0) {
-    //                 setState(() {
-    //                   serachFlag = false;
-
-    //                   videos = _result;
-    //                 });
-    //               } else {
-    //                 setState(() {
-    //                   serachFlag = false;
-
-    //                   appalyFlag = true;
-    //                 });
-    //               }
-    //             }),
-    //     ])),
-    //   );
-    // }
   }
 }

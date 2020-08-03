@@ -95,7 +95,7 @@ Future<Response> movieRemove(String id) async {
   return await delete("/video/id/" + id);
 }
 
-Future<Response> serach(String key) async {
+Future<Response> serach(String key,int page) async {
   var resp = await get("/video/serach?key=" + key);
   List<Video> locationList = List<Video>();
   if (resp.State) {
@@ -103,7 +103,7 @@ Future<Response> serach(String key) async {
     // 查询屌丝岛
   }
   if (currentUser != null && currentUser.ID != 1) {
-    var onlineList = await dsdSerach(key);
+    var onlineList = await dsdSerach(key,page);
     if (onlineList.length > 0) {
       onlineList.forEach((f) {
         locationList.forEach((e) {

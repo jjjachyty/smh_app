@@ -6,7 +6,6 @@ import 'package:smh/common/event_bus.dart';
 import 'package:smh/common/dio.dart';
 import 'package:smh/common/init.dart';
 import 'package:smh/models/video.dart';
-import 'package:smh/page/article/list.dart';
 import 'package:smh/page/video/index.dart';
 import 'package:smh/page/video/profile.dart';
 import 'package:smh/page/video/serach.dart';
@@ -83,6 +82,10 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
               // color: Colors.red,
             ),
             onPressed: () {
+               if (currentUser == null){
+            eventBus.fire(ToLogin());
+            return;
+          }
               showSearch(context: context, delegate: SearchBarDelegate());
             },
           )

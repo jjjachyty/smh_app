@@ -108,7 +108,7 @@ class _VideoIndexPageState extends State<VideoIndexPage> {
         _getSwipper(),
         VideoWatchingPage(),
         ListTile(
-          leading: Text("最新观看:"),
+          leading: Text("全网最新观看:"),
         ),
         VideosPage(),
       ],
