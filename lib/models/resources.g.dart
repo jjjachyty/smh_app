@@ -10,6 +10,7 @@ VideoResources _$VideoResourcesFromJson(Map<String, dynamic> json) {
   return VideoResources(
     ID: json['ID'] as String,
     Name: json['Name'] as String,
+    Platform:json['Platform'] as String,
     VideoThumbnail: json['VideoThumbnail'] as String,
     VideoID: json['VideoID'] as String,
     URL: json['URL'] as String,
@@ -23,6 +24,7 @@ Map<String, dynamic> _$VideoResourcesToJson(VideoResources instance) =>
       'ID': instance.ID,
       'Name': instance.Name,
       'VideoID': instance.VideoID,
+      'Platform':instance.Platform,
       'VideoThumbnail': instance.VideoThumbnail,
       'URL': instance.URL,
       'ResourcesID': instance.ResourcesID,

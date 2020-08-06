@@ -116,10 +116,11 @@ class _SerachResultPageState extends State<SerachResultPage> {
             return;
           }
           if (resp.Data != null && resp.Data.length != 0) {
-            videos.addAll(resp.Data);
-            if (resp.Data.length < 7) {
+             if (resp.Data.length < 6) {
               _nodata = true;
             }
+            videos.addAll(resp.Data);
+           
           }
         });
       }

@@ -36,10 +36,13 @@ class VideoProfilePage extends StatefulWidget {
   _VideoProfilePageState createState() => _VideoProfilePageState();
 }
 
-class _VideoProfilePageState extends State<VideoProfilePage> {
+class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerProviderStateMixin{
   VideoResources playResources;
-  int currentIndex;
-  List<VideoResources> resources;
+   String currentPlayURL = "";
+    TabController controller;
+    List<Tab> tabs = List<Tab>();
+
+  Map<String,List<VideoResources>> resources;
   User creater;
   FijkPlayer player = new FijkPlayer();
   bool canView = false;
@@ -133,11 +136,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                     return UserProfilePage(creater);
                   }));
                 },
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(creater != null
-                      ? creater.Avatar
-                      : "images/avatar/hanweizhelianmeng-yemoxia.png"),
-                ),
+                child: creater != null?CircleAvatar(
+                  backgroundImage: AssetImage(
+                      creater.Avatar
+                      ),
+                ):Text("暂无人观看"),
               ),
             )
           ],
@@ -150,7 +153,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
   void initState() {
     _listener();
 
-    if (widget.movie.Genre == "限制级") {
+    if (widget.movie.Genre == "伦理片") {
       checkVIP().then((_resp) {
         if (_resp.State) {
           if (_resp.Data as bool) {
@@ -161,6 +164,13 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
               setState(() {
                 resources = list;
               });
+
+                  controller =
+        TabController(initialIndex: 0, length: resources.length, vsync: this);
+        tabs = resources.keys.map((e){
+                return  Tab(text: e.toString(),);
+              }).toList();
+              
             });
             return;
           }
@@ -182,6 +192,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
         setState(() {
           resources = list;
         });
+            controller =
+        TabController(initialIndex: 0, length: resources.length, vsync: this);
+        tabs = resources.keys.map((e){
+                return  Tab(text: e.toString(),);
+              }).toList();
       });
     }
 
@@ -208,6 +223,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
         _player3 = player;
       });
     });
+    //initialIndex初始选中第几个
 
     // TODO: implement initState
     super.initState();
@@ -223,8 +239,160 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
     super.dispose();
   }
 
+ Widget _getResource(String key ){
+   if (resources!=null){
+
+      return  GridView.builder(
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 4,
+                                        crossAxisSpacing: 2.0,
+                                        mainAxisSpacing: 2,
+                                        childAspectRatio: 3),
+                                scrollDirection: Axis.vertical,
+                                itemCount: resources[key].length,
+                                itemBuilder: (c, i) {
+                                  return FlatButton(
+                                    padding: EdgeInsets.all(0),
+                                    child: Text(
+                                      resources[key][i].Name,
+                                      style: TextStyle(
+                                          color: currentPlayURL == resources[key][i].URL
+                                              ? Colors.white
+                                              : Colors.black),
+                                    ),
+                                    color: currentPlayURL == resources[key][i].URL
+                                        ? Colors.red
+                                        : Colors.white,
+                                    onPressed: () async {
+                                      setState(() {
+                                        currentPlayURL = resources[key][i].URL;
+                                      });
+                                      // rewardedVideoAd().then((onValue) {
+                                      //   RewardedVideoAd.instance.show();
+                                      // });
+                                      interstitialAd.load();
+                                      interstitialAd.show();
+
+                                      //判断有没有登录
+                                      if (currentUser == null) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        LoginPage()));
+                                        return;
+                                      }
+
+                                      //判断是从本地加载而来，还是从第三方
+                                      var _tmp = resources[key][i];
+                                      var _movieTmp = widget.movie;
+                                      if (_tmp.URL.contains(".html")) {
+                                        var _url =
+                                            await getURL(resources[key][i].URL);
+                                        _tmp.URL = _url;
+                                      }
+
+                                      if (_tmp.URL.contains(".m3u8")) {
+                                        if (player.state == FijkState.end) {
+                                          player = FijkPlayer();
+                                        }
+                                        if (player.state == FijkState.started) {
+                                          await player.reset();
+                                        }
+
+                                        player.setDataSource(_tmp.URL,
+                                            autoPlay: true, showCover: true);
+                                        setState(() {
+                                          playResources = _tmp;
+                                        });
+                                      } else {
+                                       player.release();
+                                       setState(() {
+                                         playResources = null;
+                                       });
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return WebViewPage(
+                                              _tmp.Name, _tmp.URL);
+                                        }));
+                                      }
+                                      if (widget.movie.Genre != "伦理片"){
+                                      if (_movieTmp.ID == null ||
+                                          _movieTmp.ID == "") {
+                                        _movieTmp.CreateBy = currentUser != null
+                                            ? currentUser.ID
+                                            : "";
+
+                                        var _resp =
+                                            await movieAdd(widget.movie);
+                                        if (_resp.State) {
+                                          // var res = resources[key][i];
+
+                                          _movieTmp =
+                                              Video.fromJson(_resp.Data);
+                                          _tmp.VideoID = _movieTmp.ID;
+                                          _tmp.VideoThumbnail = _movieTmp.Cover;
+                                          _tmp.State = true;
+
+                                          setState(() {
+                                            widget.movie = _movieTmp;
+                                          });
+                                        }
+                                      }
+
+                                      //��果资源ID 为空 则新增资源
+                                      if (_tmp.ID == null) {
+                                        var _resResp = await addResources(_tmp);
+                                        if (_resResp.State) {
+                                          _tmp = VideoResources.fromJson(
+                                              _resResp.Data);
+                                        }
+                                        setState(() {
+                                          _tmp.VideoID = _movieTmp.ID;
+                                          _tmp.VideoThumbnail = _movieTmp.Cover;
+                                          resources[key][i] = _tmp;
+                                        });
+                                      }
+
+                                      //更新观看记录
+                                      if (currentUser != null &&
+                                          currentUser.ID != null) {
+                                        var history = WatchingHistory(
+                                          UserID: currentUser == null
+                                              ? ""
+                                              : currentUser.ID,
+                                          VideoID: _movieTmp.ID,
+                                          VideoName: _movieTmp.Name,
+                                          ResourcesID: _tmp.ID,
+                                          ResourcesName: _tmp.Name,
+                                          VideoDuration: 0,
+                                          VideoThumbnail: _movieTmp.Cover,
+                                        );
+                                        // var _historyResp =
+                                        //     await getResourceWatch(history);
+                                        // if (_historyResp.State) {
+                                        //   var _result = WatchingHistory.fromJson(
+                                        //       _historyResp.Data);
+                                        //   if (_result.CreateAt ==
+                                        //       "0001-01-01T00:00:00Z") {
+                                        addWatch(history);
+                                      }
+                                      //   }
+                                      // }
+                                      }
+                                    },
+                                  );
+                                }); 
+}}
+
+
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -239,13 +407,12 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
           children: <Widget>[
             Container(
               height: 300,
-              child: playResources != null
+              child: playResources != null && playResources.URL.contains(".m3u8") 
                   ? FijkPlayPage(widget.movie, playResources,
                       player) //PlayPage(widget.movie, playResources)
                   : _profile(),
             ),
-            Divider(),
-            playResources != null && playResources.URL.contains(".m3u8")
+            currentPlayURL.contains(".m3u8")
                 ? Container(
                     height: 30,
                     child: Row(
@@ -320,157 +487,44 @@ class _VideoProfilePageState extends State<VideoProfilePage> {
                     ),
                   )
                 : Text(""),
-            Divider(),
+
+         canView
+                    ? ( resources !=null?  Column(children:[  Container(
+              child:
+          TabBar(
+              controller: controller,//可以和TabBarView使用同一个TabController
+              tabs: tabs,
+              labelColor: Colors.red,
+              indicatorColor: Colors.red,
+              indicatorWeight: 1,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorPadding: EdgeInsets.only(bottom: 10.0),
+              labelPadding: EdgeInsets.only(left: 20),
+              labelStyle: TextStyle(
+                fontSize: 15.0,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontSize: 12.0,
+              ),
+            )),
             Container(
-                height: 100,
-                child: canView
-                    ? (resources == null
-                        ? Text("加载中....")
-                        : resources.length > 0
-                            ? GridView.builder(
-                                padding: EdgeInsets.zero,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 4,
-                                        crossAxisSpacing: 2.0,
-                                        mainAxisSpacing: 2,
-                                        childAspectRatio: 3),
-                                scrollDirection: Axis.vertical,
-                                itemCount: resources.length,
-                                itemBuilder: (c, i) {
-                                  return FlatButton(
-                                    padding: EdgeInsets.all(0),
-                                    child: Text(
-                                      resources[i].Name,
-                                      style: TextStyle(
-                                          color: currentIndex == i
-                                              ? Colors.white
-                                              : Colors.black),
-                                    ),
-                                    color: currentIndex == i
-                                        ? Colors.red
-                                        : Colors.white,
-                                    onPressed: () async {
-                                      setState(() {
-                                        currentIndex = i;
-                                      });
-                                      // rewardedVideoAd().then((onValue) {
-                                      //   RewardedVideoAd.instance.show();
-                                      // });
-                                      interstitialAd.load();
-                                      interstitialAd.show();
-
-                                      //判断有没有登录
-                                      if (currentUser == null) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        LoginPage()));
-                                        return;
-                                      }
-
-                                      //判断是从本地加载而来，还是从第三方
-                                      var _tmp = resources[i];
-                                      var _movieTmp = widget.movie;
-                                      if (_tmp.URL.contains(".html")) {
-                                        var _url =
-                                            await getURL(resources[i].URL);
-                                        _tmp.URL = _url;
-                                      }
-
-                                      if (_tmp.URL.contains(".m3u8")) {
-                                        if (player.state == FijkState.end) {
-                                          player = FijkPlayer();
-                                        }
-                                        if (player.state == FijkState.started) {
-                                          await player.reset();
-                                        }
-
-                                        player.setDataSource(_tmp.URL,
-                                            autoPlay: true, showCover: true);
-                                        setState(() {
-                                          playResources = _tmp;
-                                        });
-                                      } else {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return WebViewPage(
-                                              _tmp.Name, _tmp.URL);
-                                        }));
-                                      }
-                                      if (_movieTmp.ID == null ||
-                                          _movieTmp.ID == "") {
-                                        _movieTmp.CreateBy = currentUser != null
-                                            ? currentUser.ID
-                                            : "";
-
-                                        var _resp =
-                                            await movieAdd(widget.movie);
-                                        if (_resp.State) {
-                                          // var res = resources[i];
-
-                                          _movieTmp =
-                                              Video.fromJson(_resp.Data);
-                                          _tmp.VideoID = _movieTmp.ID;
-                                          _tmp.VideoThumbnail = _movieTmp.Cover;
-                                          _tmp.State = true;
-
-                                          setState(() {
-                                            widget.movie = _movieTmp;
-                                          });
-                                        }
-                                      }
-
-                                      //��果资源ID 为空 则新增资源
-                                      if (_tmp.ID == null) {
-                                        var _resResp = await addResources(_tmp);
-                                        if (_resResp.State) {
-                                          _tmp = VideoResources.fromJson(
-                                              _resResp.Data);
-                                        }
-                                        setState(() {
-                                          _tmp.VideoID = _movieTmp.ID;
-                                          _tmp.VideoThumbnail = _movieTmp.Cover;
-                                          resources[i] = _tmp;
-                                        });
-                                      }
-
-                                      //更新观看记录
-                                      if (currentUser != null &&
-                                          currentUser.ID != null) {
-                                        var history = WatchingHistory(
-                                          UserID: currentUser == null
-                                              ? ""
-                                              : currentUser.ID,
-                                          VideoID: _movieTmp.ID,
-                                          VideoName: _movieTmp.Name,
-                                          ResourcesID: _tmp.ID,
-                                          ResourcesName: _tmp.Name,
-                                          VideoDuration: 0,
-                                          VideoThumbnail: _movieTmp.Cover,
-                                        );
-                                        // var _historyResp =
-                                        //     await getResourceWatch(history);
-                                        // if (_historyResp.State) {
-                                        //   var _result = WatchingHistory.fromJson(
-                                        //       _historyResp.Data);
-                                        //   if (_result.CreateAt ==
-                                        //       "0001-01-01T00:00:00Z") {
-                                        addWatch(history);
-                                      }
-                                      //   }
-                                      // }
-                                    },
-                                  );
-                                })
-                            : Text("无"))
-                    : Text(
+              height: 200,
+              child: 
+            TabBarView(
+              controller: controller,
+              children: 
+              
+              (
+                   resources.keys
+                  .map((key){
+                   return Container(child: _getResource(key));})
+                  .toList()
+                    )
+                     ))]):Center(child:Text("加载资源中"))):Text(
                         "非VIP暂不能观看限制类电影",
                         style: TextStyle(color: Colors.red),
-                      )),
+                      ),
+
             Container(
               height: 250,
               child: VideoCommentPage(widget.movie),

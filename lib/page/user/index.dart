@@ -172,7 +172,18 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
                     // print("*********奖励 $rewardAmount");
                     await getVIP();
                     eventBus.fire(UserChangeEvent);
-
+                    Fluttertoast.showToast(
+                        msg: "VIP续签成功",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        timeInSecForIos: 2,
+                        fontSize: 16.0);
+                      setState(() {
+                        // currentUser.VIPEndTime
+                       currentUser.VIPEndTime =  DateTime.parse(currentUser.VIPEndTime).add(Duration(days: 1)).toString();
+                      });
                     break;
                   case RewardedVideoAdEvent.started:
                     break;

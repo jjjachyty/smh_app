@@ -67,7 +67,7 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     final Completer<WebViewController> _controller =
         Completer<WebViewController>();
 
@@ -77,13 +77,35 @@ class _WebViewPageState extends State<WebViewPage> {
           title: Text(widget.title),
           backgroundColor: Colors.black,
         ),
-        body: WebView(
+        body:
+     
+         WebView(
+
           initialUrl: widget.url,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
+          userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
           gestureNavigationEnabled: true,
-        ));
-  }
+          
+        )
+        );
+
+  // return WebviewScaffold(
+  //           url: widget.url,
+  //           mediaPlaybackRequiresUserGesture: false,
+  //           appBar: AppBar(
+  //          title: Text(widget.title),
+  //           ),
+  //           withZoom: true,
+  //           withLocalStorage: true,
+  //           hidden: true,
+  //           initialChild: Container(
+  //             color: Colors.redAccent,
+  //             child: const Center(
+  //               child: Text('Waiting.....'),
+  //             ),
+  //           ),);
+   }
 }

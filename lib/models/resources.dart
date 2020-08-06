@@ -10,6 +10,7 @@ part 'resources.g.dart';
 @JsonSerializable()
 class VideoResources {
   String ID;
+  String Platform;
   String Name;
   String VideoID;
   String VideoThumbnail;
@@ -19,6 +20,7 @@ class VideoResources {
   VideoResources(
       {this.ID,
       this.Name,
+      this.Platform,
       this.VideoThumbnail,
       this.VideoID,
       this.URL,
@@ -53,8 +55,9 @@ Future<Response> addResources(VideoResources resources) async {
   return await post("/video/addresources", resources.toJson());
 }
 
-Future<List<VideoResources>> getResources(Video movie) async {
-  List<VideoResources> list;
+Future<Map<String,List<VideoResources>>> getResources(Video movie) async {
+  Map<String,List<VideoResources>> results = new Map<String,List<VideoResources>>(); 
+ List<VideoResources> list;
   if (movie.ID != null) {
     var _resp = await movieResources(movie.ID);
     if (_resp.State) {
@@ -62,29 +65,29 @@ Future<List<VideoResources>> getResources(Video movie) async {
     }
   }
   if (movie.DetailURL == null || movie.DetailURL == "") {
-    return list;
+     list.forEach((element) { 
+       results[element.Platform].add(element);
+     });
+     return results;
   }
 
-  List<VideoResources> onlineList;
   //从第三方来
-  onlineList = (await resources(movie.DetailURL));
+  results = (await resources(movie.DetailURL));
   if (list == null) {
     //本地没有 直接返回在线的
-    return onlineList;
+    return results;
   }
-  var _tmp = new List<VideoResources>();
-  onlineList.forEach((f) {
-    // var addFlag = false;
-    list.forEach((e) {
-      print("${e.Name}====${f.Name}");
-      if (e.Name == f.Name) {
-        f = e;
-      }
+  // var _tmp = new List<VideoResources>();
+  results.values.forEach((element) {
+    element.forEach((element1) { 
+      list.forEach((element2) { 
+        if (element1.Name == element2.Name){
+          element1 = element2;
+        }
+      });
+      
     });
-    // if (!addFlag) {
-    //   _tmp.add(f);
-    // }
-  });
+   });
   // list.addAll(_tmp);
-  return onlineList;
+  return results;
 }

@@ -494,6 +494,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.9.6+3"
+  native_webview:
+    dependency: "direct main"
+    description:
+      name: native_webview
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.23.0"
   node_interop:
     dependency: transitive
     description:
@@ -911,7 +918,7 @@ packages:
       name: webview_flutter
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.3.19+9"
+    version: "0.3.22+1"
   xml:
     dependency: transitive
     description:

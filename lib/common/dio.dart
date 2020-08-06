@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart' as dio;
+import 'package:smh/models/user.dart';
 
 import 'event_bus.dart';
 import 'init.dart';
@@ -81,12 +82,13 @@ Future<String> refreshToken(String token) async {
     if (response.data["State"]) {
       _token = response.data['Data']['Token']; //获取返回的新token
       print('oldtoke=${token}   newToken:$_token');
+      setToken(_token);
     }
   } on dio.DioError catch (e) {
     if (e.response == null) {
       print('DioError:${e.message}');
     } else {
-      if (e.response.statusCode == 422) {
+      if (e.response.statusCode == 422 || e.response.statusCode == 401) {
         print('422Error:${e.response.data['msg']}');
         //422状态码代表异地登录，token失效，发送登录失效事件，以便app弹出登录页面
         eventBus.fire(ToLogin());
