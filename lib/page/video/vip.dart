@@ -20,7 +20,7 @@ class _VipVideoPageState extends State<VipVideoPage> {
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
-  var _player = "https://player.gps0476.com/1717yun/?url=";
+  var _player = "https://17kyun.com/api.php?url=";
 
   @override
   void initState() {
