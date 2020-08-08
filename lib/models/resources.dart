@@ -73,7 +73,7 @@ Future<Map<String,List<VideoResources>>> getResources(Video movie) async {
 
   //从第三方来
   results = (await resources(movie.DetailURL));
-  if (list == null) {
+  if (list == null || list.length == 0) {
     //本地没有 直接返回在线的
     return results;
   }
