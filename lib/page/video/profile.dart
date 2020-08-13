@@ -48,7 +48,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
   bool canView = false;
 
   Player _player1 = new Player(
-      Name: "最快云", URL: "https://player.gxtstatic.com/m3u8dp.php?url=");
+      Name: "17k云", URL: "https://17kyun.com/api.php?url=");
   Player _player2 =
       new Player(Name: "高速云", URL: "https://www.660406.com/parse393/?url=");
   Player _player3 =
@@ -153,41 +153,6 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
   void initState() {
     _listener();
 
-    if (widget.movie.Genre == "伦理片") {
-      checkVIP().then((_resp) {
-        if (_resp.State) {
-          if (_resp.Data as bool) {
-            setState(() {
-              canView = true;
-            });
-            getResources(widget.movie).then((list) {
-              setState(() {
-                resources = list;
-              });
-
-                  controller =
-        TabController(initialIndex: 0, length: resources.length, vsync: this);
-        tabs = resources.keys.map((e){
-                return  Tab(text: e.toString(),);
-              }).toList();
-              
-            });
-            return;
-          }
-        } else {
-          Fluttertoast.showToast(
-              msg: "服务器请求失败,请稍后再试",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIos: 2,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          return;
-        }
-      });
-    } else {
-      canView = true;
       getResources(widget.movie).then((list) {
         setState(() {
           resources = list;
@@ -198,31 +163,10 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                 return  Tab(text: e.toString(),);
               }).toList();
       });
-    }
+    
 
-    if (widget.movie.CreateBy != null && widget.movie.CreateBy != 0) {
-      getUserInfo(widget.movie.CreateBy).then((user) {
-        setState(() {
-          creater = user;
-        });
-      });
-    }
 
-    getPlayer("2").then((player) {
-      setState(() {
-        _player1 = player;
-      });
-    });
-    getPlayer("3").then((player) {
-      setState(() {
-        _player2 = player;
-      });
-    });
-    getPlayer("4").then((player) {
-      setState(() {
-        _player3 = player;
-      });
-    });
+
     //initialIndex初始选中第几个
 
     // TODO: implement initState
@@ -320,70 +264,8 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                                               _tmp.Name, _tmp.URL);
                                         }));
                                       }
-                                      if (widget.movie.Genre != "伦理片"){
-                                      if (_movieTmp.ID == null ||
-                                          _movieTmp.ID == "") {
-                                        _movieTmp.CreateBy = currentUser != null
-                                            ? currentUser.ID
-                                            : "";
 
-                                        var _resp =
-                                            await movieAdd(widget.movie);
-                                        if (_resp.State) {
-                                          // var res = resources[key][i];
-
-                                          _movieTmp =
-                                              Video.fromJson(_resp.Data);
-                                          _tmp.VideoID = _movieTmp.ID;
-                                          _tmp.VideoThumbnail = _movieTmp.Cover;
-                                          _tmp.State = true;
-
-                                          setState(() {
-                                            widget.movie = _movieTmp;
-                                          });
-                                        }
-                                      }
-
-                                      //��果资源ID 为空 则新增资源
-                                      if (_tmp.ID == null) {
-                                        var _resResp = await addResources(_tmp);
-                                        if (_resResp.State) {
-                                          _tmp = VideoResources.fromJson(
-                                              _resResp.Data);
-                                        }
-                                        setState(() {
-                                          _tmp.VideoID = _movieTmp.ID;
-                                          _tmp.VideoThumbnail = _movieTmp.Cover;
-                                          resources[key][i] = _tmp;
-                                        });
-                                      }
-
-                                      //更新观看记录
-                                      if (currentUser != null &&
-                                          currentUser.ID != null) {
-                                        var history = WatchingHistory(
-                                          UserID: currentUser == null
-                                              ? ""
-                                              : currentUser.ID,
-                                          VideoID: _movieTmp.ID,
-                                          VideoName: _movieTmp.Name,
-                                          ResourcesID: _tmp.ID,
-                                          ResourcesName: _tmp.Name,
-                                          VideoDuration: 0,
-                                          VideoThumbnail: _movieTmp.Cover,
-                                        );
-                                        // var _historyResp =
-                                        //     await getResourceWatch(history);
-                                        // if (_historyResp.State) {
-                                        //   var _result = WatchingHistory.fromJson(
-                                        //       _historyResp.Data);
-                                        //   if (_result.CreateAt ==
-                                        //       "0001-01-01T00:00:00Z") {
-                                        addWatch(history);
-                                      }
-                                      //   }
-                                      // }
-                                      }
+                                      
                                     },
                                   );
                                 }); 
@@ -488,8 +370,8 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                   )
                 : Text(""),
 
-         canView
-                    ? ( resources !=null?  Column(children:[  Container(
+         
+                     ( resources !=null?  Column(children:[  Container(
               child:
           TabBar(
               controller: controller,//可以和TabBarView使用同一个TabController
@@ -520,10 +402,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                    return Container(child: _getResource(key));})
                   .toList()
                     )
-                     ))]):Center(child:Text("加载资源中"))):Text(
-                        "非VIP暂不能观看限制类电影",
-                        style: TextStyle(color: Colors.red),
-                      ),
+                     ))]):Center(child:Text("加载资源中"))),
 
             Container(
               height: 250,

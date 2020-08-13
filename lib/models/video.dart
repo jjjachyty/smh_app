@@ -96,30 +96,11 @@ Future<Response> movieRemove(String id) async {
 }
 
 Future<Response> serach(String key,int page) async {
-  var resp = await get("/video/serach?key=" + key);
-  List<Video> locationList = List<Video>();
-  if (resp.State) {
-    locationList = toList(resp.Data);
-    // 查询屌丝岛
-  }
-  if (currentUser != null && currentUser.ID != 1) {
-    var onlineList = await dsdSerach(key,page);
-    if (onlineList.length > 0) {
-      onlineList.forEach((f) {
-        locationList.forEach((e) {
-          // print("${e.Name} ==== ${f.Name} === ${e.Director}=== ${f.Director}");
-          if (e.Name == f.Name && e.Director == f.Director) {
-            f = e;
-          }
-        });
-      });
-    }
-    resp.Data = onlineList;
-  } else {
-    resp.Data = locationList;
-  }
 
-  return resp;
+    var onlineList = await dsdSerach(key,page);
+   
+
+  return Response(true, "", "Message", onlineList);
 }
 
 Future<Response> userCreate(int offset, int userid) async {

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smh/ads/interstitial.dart';
@@ -12,6 +13,7 @@ import 'package:smh/page/video/serach.dart';
 import 'package:smh/page/user/index.dart';
 import 'package:smh/page/user/login.dart';
 import 'package:smh/page/user/nologin.dart';
+import 'package:smh/page/video/vip.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -59,9 +61,9 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: new Drawer(
-        child: currentUser == null ? NoLoginPage() : UserIndexPage(),
-      ),
+      // drawer: new Drawer(
+      //   child: currentUser == null ? NoLoginPage() : UserIndexPage(),
+      // ),
       appBar: AppBar(
         backgroundColor: Colors.red,
         elevation: 0,
@@ -69,28 +71,10 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         //   "书名号",
         //   // style: TextStyle(color: Colors.red),
         // ),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: new Icon(Icons.account_circle),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              // color: Colors.red,
-            ),
-            onPressed: () {
-               if (currentUser == null){
-            eventBus.fire(ToLogin());
-            return;
-          }
-              showSearch(context: context, delegate: SearchBarDelegate());
-            },
-          )
-        ],
-        title: Text("书名号"),
+      
+        
+       
+        title: Text("书名号-单机版"),
         centerTitle: true,
         // TabBar(
         //     unselectedLabelColor: Colors.grey,

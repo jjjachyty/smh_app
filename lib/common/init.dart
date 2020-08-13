@@ -10,8 +10,8 @@ import 'package:smh/models/user.dart';
 import 'package:smh/models/version.dart';
 
 User currentUser;
-var currentVersion = "0.1.0"; //当前版本
-Version newestVersion = new Version(VersionCode: "0.1.0"); //最新版本
+var currentVersion = "0.0.1"; //当前版本
+Version newestVersion = new Version(VersionCode: "0.0.1"); //最新版本
 
 String token;
 DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -31,7 +31,7 @@ Future<void> init() async {
   token = await getStorageString("_token");
   initDio();
   localPath = await findLocalPath();
-  await getVersion(Platform.operatingSystem);
+  // await getVersion(Platform.operatingSystem);
   FirebaseAdMob.instance
       .initialize(appId: "ca-app-pub-4849347031921234~6752835093");
   if (Platform.isIOS) {
