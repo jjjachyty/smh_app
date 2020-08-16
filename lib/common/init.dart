@@ -10,8 +10,8 @@ import 'package:smh/models/user.dart';
 import 'package:smh/models/version.dart';
 
 User currentUser;
-var currentVersion = "0.1.0"; //当前版本
-Version newestVersion = new Version(VersionCode: "0.1.0"); //最新版本
+var currentVersion = "0.1.1"; //当前版本
+Version newestVersion = new Version(VersionCode: "0.1.1"); //最新版本
 
 String token;
 DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
