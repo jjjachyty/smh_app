@@ -26,19 +26,19 @@ RegExp phoneExp = RegExp(
 RegExp passwdExp = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,16}$');
 
 Future<void> init() async {
-  await initSharedPreferences();
-  await getUser();
-  token = await getStorageString("_token");
+  // await initSharedPreferences();
+  // await getUser();
+  // token = await getStorageString("_token");
   initDio();
   localPath = await findLocalPath();
   // await getVersion(Platform.operatingSystem);
   FirebaseAdMob.instance
       .initialize(appId: "ca-app-pub-4849347031921234~6752835093");
-  if (Platform.isIOS) {
-    testDevice = (await deviceInfo.iosInfo).identifierForVendor;
-  } else {
-    testDevice = (await deviceInfo.androidInfo).androidId;
-  }
+  // if (Platform.isIOS) {
+  //   testDevice = (await deviceInfo.iosInfo).identifierForVendor;
+  // } else {
+  //   testDevice = (await deviceInfo.androidInfo).device;
+  // }
   print("testDevice========${testDevice}");
   interstitialAd = createInterstitialAd();
   rewardedVideoAd();

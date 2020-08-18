@@ -219,16 +219,16 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                                       interstitialAd.load();
                                       interstitialAd.show();
 
-                                      //判断有没有登录
-                                      if (currentUser == null) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        LoginPage()));
-                                        return;
-                                      }
+                                      // //判断有没有登录
+                                      // if (currentUser == null) {
+                                      //   Navigator.push(
+                                      //       context,
+                                      //       MaterialPageRoute(
+                                      //           builder:
+                                      //               (BuildContext context) =>
+                                      //                   LoginPage()));
+                                      //   return;
+                                      // }
 
                                       //判断是从本地加载而来，还是从第三方
                                       var _tmp = resources[key][i];
@@ -371,7 +371,7 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                 : Text(""),
 
          
-                     ( resources !=null?  Column(children:[  Container(
+                     ( resources !=null? resources.length ==0 ? Text("暂无资源"): Column(children:[  Container(
               child:
           TabBar(
               controller: controller,//可以和TabBarView使用同一个TabController

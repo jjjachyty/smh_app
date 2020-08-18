@@ -18,7 +18,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="书名号"
+        android:label="书名号-单机版"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
