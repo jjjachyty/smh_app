@@ -22,13 +22,94 @@ class _VideoIndexPageState extends State<VideoIndexPage> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
+    videos = [
+      Video(
+          Name: "日常英语",
+          Cover:
+              "https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1915226453.jpg",
+          Years: "2020",
+          Genre: "日常",
+          Director: "",
+          Actor: "",
+          Region: "美国"),
+      Video(
+          Name: "零基础英语",
+          Cover:
+              "https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1915013701.jpg",
+          Years: "2020",
+          Genre: "日常",
+          Director: "",
+          Actor: "",
+          Region: "美国"),
+      Video(
+          Name: "商务英语",
+          Cover:
+              "https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1915013702.jpg",
+          Years: "2020",
+          Genre: "日常",
+          Director: "",
+          Actor: "",
+          Region: "美国"),
+      Video(
+          Name: "旅游英语",
+          Cover:
+              "https://dss2.bdstatic.com/8_V1bjqh_Q23odCf/pacific/1915013709.jpg",
+          Years: "2020",
+          Genre: "日常",
+          Director: "",
+          Actor: "",
+          Region: "美国"),
+    ];
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
+  Widget _initWidget() {
+    return GridView.builder(
+      physics: AlwaysScrollableScrollPhysics(),
+      // controller: _scrollController,
+      scrollDirection: Axis.vertical,
+      //SliverGridDelegateWithFixedCrossAxisCount 构建一个横轴固定数量Widget
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //横轴元素个数
+        crossAxisCount: 3,
+        //纵轴间距
+        mainAxisSpacing: 0.5,
+        //横轴间距
+        crossAxisSpacing: 0.5,
+        //子组件宽高长度比例
+      ),
+
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+            onTap: () async {
+              //获取电影信息
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          VideoProfilePage(videos[index])));
+            },
+            child: Container(
+                child: Column(
+              children: <Widget>[
+                Container(
+                    height: 100,
+                    width: 100,
+                    child: Image.network(
+                      videos[index].Cover,
+                      fit: BoxFit.fill,
+                    )),
+              ],
+            )));
+      },
+    );
+  }
+
+  Widget _movieWidget() {
+    return Column(
       children: <Widget>[
         ListTile(
           subtitle: Text("原站VIP"),
@@ -77,12 +158,12 @@ class _VideoIndexPageState extends State<VideoIndexPage> {
                 label: Text("")),
             FlatButton.icon(
                 onPressed: () {
-                   interstitialAd.load();
+                  interstitialAd.load();
                   interstitialAd.show();
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return VipVideoPage("芒果", "https://m.mgtv.com/channel/home/");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return VipVideoPage(
+                        "芒果", "https://m.mgtv.com/channel/home/");
                   }));
-                  
                 },
                 icon: Image.asset("images/hunantvlogo.png"),
                 label: Text("")),
@@ -107,7 +188,16 @@ class _VideoIndexPageState extends State<VideoIndexPage> {
             subtitle:
                 Text("当前版本" + currentVersion + "\n如有任何问题请前往QQ群1091923826交流")),
       ],
-    ));
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+      child: flag ? _movieWidget() : _initWidget(),
+    );
+    ;
   }
 
   @override

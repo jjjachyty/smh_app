@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smh/ads/interstitial.dart';
 import 'package:smh/common/event_bus.dart';
 import 'package:smh/common/dio.dart';
 import 'package:smh/common/init.dart';
+import 'package:smh/common/utils.dart';
 import 'package:smh/models/video.dart';
 import 'package:smh/page/video/index.dart';
 import 'package:smh/page/video/profile.dart';
@@ -22,6 +28,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TabController controller;
+  Key key = new UniqueKey();
 
   void _listener() {
     eventBus.on().listen((event) {
@@ -61,6 +68,8 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
+
       // drawer: new Drawer(
       //   child: currentUser == null ? NoLoginPage() : UserIndexPage(),
       // ),
@@ -71,10 +80,25 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         //   "书名号",
         //   // style: TextStyle(color: Colors.red),
         // ),
-      
-        
-       
-        title: Text("书名号-单机版"),
+
+        title: Text.rich(TextSpan(
+            text: "书名号",
+            recognizer:
+                LongPressGestureRecognizer(duration: Duration(seconds: 5))
+                  ..onLongPress = () async {
+                    await setStorageBool("flag", true);
+                    Fluttertoast.showToast(
+                            msg: "请重新打开",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIos: 2,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0)
+                        .then((value) => () {
+                              exit(0);
+                            });
+                  })),
         centerTitle: true,
         // TabBar(
         //     unselectedLabelColor: Colors.grey,

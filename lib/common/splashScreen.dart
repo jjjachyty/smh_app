@@ -37,13 +37,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     _timer.cancel();
-    if (newestVersion.VersionCode != currentVersion) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => VersionPage()));
-    } else {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => IndexPage()));
-    }
+    // if (newestVersion.VersionCode != currentVersion) {
+    // Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (BuildContext context) => VersionPage()));
+    // } else {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => IndexPage()));
+    // }
   }
 
   @override

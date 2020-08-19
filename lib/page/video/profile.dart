@@ -36,19 +36,20 @@ class VideoProfilePage extends StatefulWidget {
   _VideoProfilePageState createState() => _VideoProfilePageState();
 }
 
-class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerProviderStateMixin{
+class _VideoProfilePageState extends State<VideoProfilePage>
+    with SingleTickerProviderStateMixin {
   VideoResources playResources;
-   String currentPlayURL = "";
-    TabController controller;
-    List<Tab> tabs = List<Tab>();
+  String currentPlayURL = "";
+  TabController controller;
+  List<Tab> tabs = List<Tab>();
 
-  Map<String,List<VideoResources>> resources;
+  Map<String, List<VideoResources>> resources;
   User creater;
   FijkPlayer player = new FijkPlayer();
   bool canView = false;
 
-  Player _player1 = new Player(
-      Name: "17k云", URL: "https://17kyun.com/api.php?url=");
+  Player _player1 =
+      new Player(Name: "17k云", URL: "https://17kyun.com/api.php?url=");
   Player _player2 =
       new Player(Name: "高速云", URL: "https://www.660406.com/parse393/?url=");
   Player _player3 =
@@ -136,11 +137,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                     return UserProfilePage(creater);
                   }));
                 },
-                child: creater != null?CircleAvatar(
-                  backgroundImage: AssetImage(
-                      creater.Avatar
-                      ),
-                ):Text("暂无人观看"),
+                child: creater != null
+                    ? CircleAvatar(
+                        backgroundImage: AssetImage(creater.Avatar),
+                      )
+                    : Text("暂无人观看"),
               ),
             )
           ],
@@ -153,19 +154,18 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
   void initState() {
     _listener();
 
-      getResources(widget.movie).then((list) {
-        setState(() {
-          resources = list;
-        });
-            controller =
-        TabController(initialIndex: 0, length: resources.length, vsync: this);
-        tabs = resources.keys.map((e){
-                return  Tab(text: e.toString(),);
-              }).toList();
+    getResources(widget.movie).then((list) {
+      setState(() {
+        resources = list;
       });
-    
-
-
+      controller =
+          TabController(initialIndex: 0, length: resources.length, vsync: this);
+      tabs = resources.keys.map((e) {
+        return Tab(
+          text: e.toString(),
+        );
+      }).toList();
+    });
 
     //initialIndex初始选中第几个
 
@@ -183,98 +183,87 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
     super.dispose();
   }
 
- Widget _getResource(String key ){
-   if (resources!=null){
+  Widget _getResource(String key) {
+    if (resources != null) {
+      return GridView.builder(
+          padding: EdgeInsets.zero,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 2.0,
+              mainAxisSpacing: 2,
+              childAspectRatio: 3),
+          scrollDirection: Axis.vertical,
+          itemCount: resources[key].length,
+          itemBuilder: (c, i) {
+            return FlatButton(
+              padding: EdgeInsets.all(0),
+              child: Text(
+                resources[key][i].Name,
+                style: TextStyle(
+                    color: currentPlayURL == resources[key][i].URL
+                        ? Colors.white
+                        : Colors.black),
+              ),
+              color: currentPlayURL == resources[key][i].URL
+                  ? Colors.red
+                  : Colors.white,
+              onPressed: () async {
+                setState(() {
+                  currentPlayURL = resources[key][i].URL;
+                });
+                // rewardedVideoAd().then((onValue) {
+                //   RewardedVideoAd.instance.show();
+                // });
+                interstitialAd.load();
+                interstitialAd.show();
 
-      return  GridView.builder(
-                                padding: EdgeInsets.zero,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 4,
-                                        crossAxisSpacing: 2.0,
-                                        mainAxisSpacing: 2,
-                                        childAspectRatio: 3),
-                                scrollDirection: Axis.vertical,
-                                itemCount: resources[key].length,
-                                itemBuilder: (c, i) {
-                                  return FlatButton(
-                                    padding: EdgeInsets.all(0),
-                                    child: Text(
-                                      resources[key][i].Name,
-                                      style: TextStyle(
-                                          color: currentPlayURL == resources[key][i].URL
-                                              ? Colors.white
-                                              : Colors.black),
-                                    ),
-                                    color: currentPlayURL == resources[key][i].URL
-                                        ? Colors.red
-                                        : Colors.white,
-                                    onPressed: () async {
-                                      setState(() {
-                                        currentPlayURL = resources[key][i].URL;
-                                      });
-                                      // rewardedVideoAd().then((onValue) {
-                                      //   RewardedVideoAd.instance.show();
-                                      // });
-                                      interstitialAd.load();
-                                      interstitialAd.show();
+                //判断有没有登录
+                if (currentUser == null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => LoginPage()));
+                  return;
+                }
 
-                                      //判断有没有登录
-                                      if (currentUser == null) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        LoginPage()));
-                                        return;
-                                      }
+                //判断是从本地加载而来，还是从第三方
+                var _tmp = resources[key][i];
+                var _movieTmp = widget.movie;
+                if (_tmp.URL.contains(".html")) {
+                  var _url = await getURL(resources[key][i].URL);
+                  _tmp.URL = _url;
+                }
 
-                                      //判断是从本地加载而来，还是从第三方
-                                      var _tmp = resources[key][i];
-                                      var _movieTmp = widget.movie;
-                                      if (_tmp.URL.contains(".html")) {
-                                        var _url =
-                                            await getURL(resources[key][i].URL);
-                                        _tmp.URL = _url;
-                                      }
+                if (_tmp.URL.contains(".m3u8")) {
+                  if (player.state == FijkState.end) {
+                    player = FijkPlayer();
+                  }
+                  if (player.state == FijkState.started) {
+                    await player.reset();
+                  }
 
-                                      if (_tmp.URL.contains(".m3u8")) {
-                                        if (player.state == FijkState.end) {
-                                          player = FijkPlayer();
-                                        }
-                                        if (player.state == FijkState.started) {
-                                          await player.reset();
-                                        }
-
-                                        player.setDataSource(_tmp.URL,
-                                            autoPlay: true, showCover: true);
-                                        setState(() {
-                                          playResources = _tmp;
-                                        });
-                                      } else {
-                                       player.release();
-                                       setState(() {
-                                         playResources = null;
-                                       });
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return WebViewPage(
-                                              _tmp.Name, _tmp.URL);
-                                        }));
-                                      }
-
-                                      
-                                    },
-                                  );
-                                }); 
-}}
-
+                  player.setDataSource(_tmp.URL,
+                      autoPlay: true, showCover: true);
+                  setState(() {
+                    playResources = _tmp;
+                  });
+                } else {
+                  player.release();
+                  setState(() {
+                    playResources = null;
+                  });
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return WebViewPage(_tmp.Name, _tmp.URL);
+                  }));
+                }
+              },
+            );
+          });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -289,10 +278,11 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
           children: <Widget>[
             Container(
               height: 300,
-              child: playResources != null && playResources.URL.contains(".m3u8") 
-                  ? FijkPlayPage(widget.movie, playResources,
-                      player) //PlayPage(widget.movie, playResources)
-                  : _profile(),
+              child:
+                  playResources != null && playResources.URL.contains(".m3u8")
+                      ? FijkPlayPage(widget.movie, playResources,
+                          player) //PlayPage(widget.movie, playResources)
+                      : _profile(),
             ),
             currentPlayURL.contains(".m3u8")
                 ? Container(
@@ -369,41 +359,37 @@ class _VideoProfilePageState extends State<VideoProfilePage> with SingleTickerPr
                     ),
                   )
                 : Text(""),
-
-         
-                     ( resources !=null?  Column(children:[  Container(
-              child:
-          TabBar(
-              controller: controller,//可以和TabBarView使用同一个TabController
-              tabs: tabs,
-              labelColor: Colors.red,
-              indicatorColor: Colors.red,
-              indicatorWeight: 1,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.only(bottom: 10.0),
-              labelPadding: EdgeInsets.only(left: 20),
-              labelStyle: TextStyle(
-                fontSize: 15.0,
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 12.0,
-              ),
-            )),
-            Container(
-              height: 200,
-              child: 
-            TabBarView(
-              controller: controller,
-              children: 
-              
-              (
-                   resources.keys
-                  .map((key){
-                   return Container(child: _getResource(key));})
-                  .toList()
-                    )
-                     ))]):Center(child:Text("加载资源中"))),
-
+            (widget.movie.Actor == ""
+                ? Text("")
+                : resources != null
+                    ? Column(children: [
+                        Container(
+                            child: TabBar(
+                          controller:
+                              controller, //可以和TabBarView使用同一个TabController
+                          tabs: tabs,
+                          labelColor: Colors.red,
+                          indicatorColor: Colors.red,
+                          indicatorWeight: 1,
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicatorPadding: EdgeInsets.only(bottom: 10.0),
+                          labelPadding: EdgeInsets.only(left: 20),
+                          labelStyle: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                          unselectedLabelStyle: TextStyle(
+                            fontSize: 12.0,
+                          ),
+                        )),
+                        Container(
+                            height: 200,
+                            child: TabBarView(
+                                controller: controller,
+                                children: (resources.keys.map((key) {
+                                  return Container(child: _getResource(key));
+                                }).toList())))
+                      ])
+                    : Center(child: Text("加载资源中"))),
             Container(
               height: 250,
               child: VideoCommentPage(widget.movie),
