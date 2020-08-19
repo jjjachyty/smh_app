@@ -17,13 +17,13 @@ class _WatchHistoryPageState extends State<WatchHistoryPage> {
   ScrollController _scrollController = new ScrollController();
 
   _loadMore() {
-    getResourceWatchs(pageSize, currentUser.ID).then((resp) {
-      if (resp.State) {
-        setState(() {
-          historys.addAll(resp.Data);
-        });
-      }
-    });
+    //   getResourceWatchs(pageSize, currentUser.ID).then((resp) {
+    //     if (resp.State) {
+    //       setState(() {
+    //         historys.addAll(resp.Data);
+    //       });
+    //     }
+    //   });
   }
 
   @override

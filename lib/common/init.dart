@@ -9,7 +9,7 @@ import 'package:smh/common/utils.dart';
 import 'package:smh/models/user.dart';
 import 'package:smh/models/version.dart';
 
-User currentUser;
+// User currentUser;
 var currentVersion = "0.0.1"; //当前版本
 Version newestVersion = new Version(VersionCode: "0.0.1"); //最新版本
 

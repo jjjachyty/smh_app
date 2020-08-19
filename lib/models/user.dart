@@ -74,25 +74,25 @@ Future<Response> register(User user) async {
 Future<Response> login(User user) async {
   var resp = await post("/user/login", user.toJson());
   if (resp.State) {
-    setUser(User.fromJson(resp.Data["User"]));
+    // setUser(User.fromJson(resp.Data["User"]));
     setToken(resp.Data["Token"]);
   }
   return resp;
 }
 
-Future<Response> getVIP() async {
-  var resp = await post("/user/vip", {});
-  if (resp.State) {
-    currentUser.VIPEndTime = resp.Data as String;
-    setUser(currentUser);
-  }
-  return resp;
-}
+// Future<Response> getVIP() async {
+//   var resp = await post("/user/vip", {});
+//   if (resp.State) {
+//     currentUser.VIPEndTime = resp.Data as String;
+//     setUser(currentUser);
+//   }
+//   return resp;
+// }
 
 Future<Response> loginWithSMS(String phone, String sms) async {
   var resp = await post("/user/loginsms", {"Phone": phone, "PassWord": sms});
   if (resp.State) {
-    setUser(User.fromJson(resp.Data["User"]));
+    // setUser(User.fromJson(resp.Data["User"]));
     setToken(resp.Data["Token"]);
   }
   return resp;
@@ -102,10 +102,10 @@ Future<Response> updateInfo(User user) async {
   return post("/user/updateinfo", user.toJson());
 }
 
-void setUser(User newUser) async {
-  currentUser = newUser;
-  await setStorageString("_user", json.encode(newUser.toJson()));
-}
+// void setUser(User newUser) async {
+//   currentUser = newUser;
+//   await setStorageString("_user", json.encode(newUser.toJson()));
+// }
 
 void setToken(String tk) async {
   token = tk;
@@ -118,12 +118,12 @@ Future<User> getUser() async {
   if (_userStr == null) {
     return null;
   }
-  currentUser = User.fromJson(json.decode(_userStr));
-  return currentUser;
+  // currentUser = User.fromJson(json.decode(_userStr));
+  // return currentUser;
 }
 
 void loginOut() {
-  currentUser = null;
+  // currentUser = null;
   removeStorage("_user");
   removeStorage("_token");
   api.options.headers[HttpHeaders.authorizationHeader] = "";

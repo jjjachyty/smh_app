@@ -60,13 +60,13 @@ double toDouble(String val) {
   return _db;
 }
 
-bool checkHasVIP() {
-  var expDt = DateTime.parse(currentUser.VIPEndTime);
-  if (DateTime.now().isBefore(expDt)) {
-    return true;
-  }
-  return false;
-}
+// bool checkHasVIP() {
+//   var expDt = DateTime.parse(currentUser.VIPEndTime);
+//   if (DateTime.now().isBefore(expDt)) {
+//     return true;
+//   }
+//   return false;
+// }
 
 Future<String> findLocalPath() async {
   final directory = Platform.isAndroid

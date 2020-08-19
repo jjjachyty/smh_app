@@ -183,7 +183,6 @@ class _VideoProfilePageState extends State<VideoProfilePage>
     super.dispose();
   }
 
-<<<<<<< HEAD
   Widget _getResource(String key) {
     if (resources != null) {
       return GridView.builder(
@@ -217,72 +216,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                 // });
                 interstitialAd.load();
                 interstitialAd.show();
-=======
- Widget _getResource(String key ){
-   if (resources!=null){
-
-      return  GridView.builder(
-                                padding: EdgeInsets.zero,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 4,
-                                        crossAxisSpacing: 2.0,
-                                        mainAxisSpacing: 2,
-                                        childAspectRatio: 3),
-                                scrollDirection: Axis.vertical,
-                                itemCount: resources[key].length,
-                                itemBuilder: (c, i) {
-                                  return FlatButton(
-                                    padding: EdgeInsets.all(0),
-                                    child: Text(
-                                      resources[key][i].Name,
-                                      style: TextStyle(
-                                          color: currentPlayURL == resources[key][i].URL
-                                              ? Colors.white
-                                              : Colors.black),
-                                    ),
-                                    color: currentPlayURL == resources[key][i].URL
-                                        ? Colors.red
-                                        : Colors.white,
-                                    onPressed: () async {
-                                      setState(() {
-                                        currentPlayURL = resources[key][i].URL;
-                                      });
-                                      // rewardedVideoAd().then((onValue) {
-                                      //   RewardedVideoAd.instance.show();
-                                      // });
-                                      interstitialAd.load();
-                                      interstitialAd.show();
-
-                                      // //判断有没有登录
-                                      // if (currentUser == null) {
-                                      //   Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //           builder:
-                                      //               (BuildContext context) =>
-                                      //                   LoginPage()));
-                                      //   return;
-                                      // }
-
-                                      //判断是从本地加载而来，还是从第三方
-                                      var _tmp = resources[key][i];
-                                      var _movieTmp = widget.movie;
-                                      if (_tmp.URL.contains(".html")) {
-                                        var _url =
-                                            await getURL(resources[key][i].URL);
-                                        _tmp.URL = _url;
-                                      }
->>>>>>> 195dd4e5b3fd77c62a7a33b4d2eb26a3dae65be3
 
                 //判断有没有登录
-                if (currentUser == null) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()));
-                  return;
-                }
+                // if (currentUser == null) {
+                //   Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //           builder: (BuildContext context) => LoginPage()));
+                //   return;
+                // }
 
                 //判断是从本地加载而来，还是从第三方
                 var _tmp = resources[key][i];
@@ -417,7 +359,6 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                     ),
                   )
                 : Text(""),
-<<<<<<< HEAD
             (widget.movie.Actor == ""
                 ? Text("")
                 : resources != null
@@ -449,47 +390,10 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                                 }).toList())))
                       ])
                     : Center(child: Text("加载资源中"))),
-=======
-
-         
-                     ( resources !=null? resources.length ==0 ? Text("暂无资源"): Column(children:[  Container(
-              child:
-          TabBar(
-              controller: controller,//可以和TabBarView使用同一个TabController
-              tabs: tabs,
-              labelColor: Colors.red,
-              indicatorColor: Colors.red,
-              indicatorWeight: 1,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.only(bottom: 10.0),
-              labelPadding: EdgeInsets.only(left: 20),
-              labelStyle: TextStyle(
-                fontSize: 15.0,
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 12.0,
-              ),
-            )),
-            Container(
-              height: 200,
-              child: 
-            TabBarView(
-              controller: controller,
-              children: 
-              
-              (
-                   resources.keys
-                  .map((key){
-                   return Container(child: _getResource(key));})
-                  .toList()
-                    )
-                     ))]):Center(child:Text("加载资源中"))),
-
->>>>>>> 195dd4e5b3fd77c62a7a33b4d2eb26a3dae65be3
-            Container(
-              height: 250,
-              child: VideoCommentPage(widget.movie),
-            ),
+            // Container(
+            //   height: 250,
+            //   child: VideoCommentPage(widget.movie),
+            // ),
           ],
         ),
       )),

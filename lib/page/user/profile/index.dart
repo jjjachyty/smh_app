@@ -72,25 +72,25 @@ class _UserProfilePageState extends State<UserProfilePage>
                         color: Theme.of(context).primaryColor,
                       ),
                       onPressed: () async {
-                        var _resp = await addFollow(Follow(
-                            UserID: currentUser.ID,
-                            FollowID: widget.user.ID,
-                            FollowName: widget.user.NickName,
-                            FollowAvatar: widget.user.Avatar));
-                        if (_resp.State) {
-                          setState(() {
-                            hasFollow = true;
-                          });
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "关注出错，请稍后重试",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIos: 2,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                        }
+                        //   var _resp = await addFollow(Follow(
+                        //       UserID: currentUser.ID,
+                        //       FollowID: widget.user.ID,
+                        //       FollowName: widget.user.NickName,
+                        //       FollowAvatar: widget.user.Avatar));
+                        //   if (_resp.State) {
+                        //     setState(() {
+                        //       hasFollow = true;
+                        //     });
+                        //   } else {
+                        //     Fluttertoast.showToast(
+                        //         msg: "关注出错，请稍后重试",
+                        //         toastLength: Toast.LENGTH_SHORT,
+                        //         gravity: ToastGravity.CENTER,
+                        //         timeInSecForIos: 2,
+                        //         backgroundColor: Colors.red,
+                        //         textColor: Colors.white,
+                        //         fontSize: 16.0);
+                        //   }
                       },
                       label: Text("关注",
                           style:

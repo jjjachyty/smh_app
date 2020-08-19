@@ -50,16 +50,16 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
       children: <Widget>[
         new Row(
           children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: CircleAvatar(
-                backgroundColor: Colors.red,
-                radius: 40,
-                backgroundImage: AssetImage(currentUser.Avatar == ""
-                    ? "images/avatar/hanweizhelianmeng-yemoxia.png"
-                    : currentUser.Avatar),
-              ),
-            ),
+            // Expanded(
+            //   flex: 1,
+            //   child: CircleAvatar(
+            //     backgroundColor: Colors.red,
+            //     radius: 40,
+            //     backgroundImage: AssetImage(currentUser.Avatar == ""
+            //         ? "images/avatar/hanweizhelianmeng-yemoxia.png"
+            //         : currentUser.Avatar),
+            //   ),
+            // ),
             Expanded(
                 flex: 2,
                 child: Column(
@@ -67,33 +67,33 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(
-                          currentUser.NickName,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        // Text(
+                        //   currentUser.NickName,
+                        //   style: TextStyle(fontWeight: FontWeight.bold),
+                        // ),
                         IconButton(
                           icon: Icon(
                             Icons.settings,
                             color: Colors.red,
                           ),
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        UserSettingPage()));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (BuildContext context) =>
+                            //             UserSettingPage()));
                           },
                         ),
                       ],
                     ),
                     Row(
                       children: <Widget>[
-                        new Text(
-                          currentUser.Introduce == ""
-                              ? '无签名'
-                              : currentUser.Introduce,
-                          style: TextStyle(color: Colors.grey),
-                        )
+                        // new Text(
+                        //   currentUser.Introduce == ""
+                        //       ? '无签名'
+                        //       : currentUser.Introduce,
+                        //   style: TextStyle(color: Colors.grey),
+                        // )
                       ],
                     ),
                   ],
@@ -112,87 +112,90 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
         //             builder: (BuildContext context) => ArticlePublishPage()));
         //   },
         // ),
-        new ListTile(
-            leading: Text('VIP'),
-            title: Text(
-              "到期时间" +
-                  formatDate(DateTime.parse(currentUser.VIPEndTime).toLocal(),
-                      [yyyy, "/", mm, "/", dd, " ", HH, ":", nn, ":", ss]),
-              style: TextStyle(color: Colors.grey, fontSize: 10),
-            ),
-            trailing: Text(
-              "看广告续签",
-              style: TextStyle(color: Colors.red),
-            ),
-            onTap: () async {
-              rewardedVideoAd();
-              RewardedVideoAd.instance.show().catchError((onError) {
-                Fluttertoast.showToast(
-                    msg: "广告加载失败,请重试",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    timeInSecForIos: 2,
-                    fontSize: 16.0);
-              });
-              RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
-                  {String rewardType, int rewardAmount}) async {
-                switch (event) {
-                  case RewardedVideoAdEvent.loaded:
-                    // RewardedVideoAd.instance.show();
-                    break;
-                  case RewardedVideoAdEvent.failedToLoad:
-                    Fluttertoast.showToast(
-                        msg: "广告加载失败,请联系管理员",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        timeInSecForIos: 2,
-                        fontSize: 16.0);
-                    //读取失败！
-                    break;
-                  case RewardedVideoAdEvent.opened:
-                    break;
-                  case RewardedVideoAdEvent.leftApplication:
-                    break;
-                  case RewardedVideoAdEvent.closed:
-                    // Fluttertoast.showToast(
-                    //     msg: "广告未看完,自动放弃获取VIP",
-                    //     toastLength: Toast.LENGTH_SHORT,
-                    //     gravity: ToastGravity.CENTER,
-                    //     backgroundColor: Colors.red,
-                    //     textColor: Colors.white,
-                    //     timeInSecForIos: 2,
-                    //     fontSize: 16.0);
-                    rewardedVideoAd();
-                    break;
-                  case RewardedVideoAdEvent.rewarded:
-                    // print("*********奖励 $rewardAmount");
-                    await getVIP();
-                    eventBus.fire(UserChangeEvent);
-                    Fluttertoast.showToast(
-                        msg: "VIP续签成功",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        timeInSecForIos: 2,
-                        fontSize: 16.0);
-                      setState(() {
-                        // currentUser.VIPEndTime
-                       currentUser.VIPEndTime =  DateTime.parse(currentUser.VIPEndTime).add(Duration(days: 1)).toString();
-                      });
-                    break;
-                  case RewardedVideoAdEvent.started:
-                    break;
-                  case RewardedVideoAdEvent.completed:
-                    print("*********播放结束");
-                    break;
-                }
-              };
-            }),
+        // new ListTile(
+        //     leading: Text('VIP'),
+        //     title: Text(
+        //       "到期时间" +
+        //           formatDate(DateTime.parse(currentUser.VIPEndTime).toLocal(),
+        //               [yyyy, "/", mm, "/", dd, " ", HH, ":", nn, ":", ss]),
+        //       style: TextStyle(color: Colors.grey, fontSize: 10),
+        //     ),
+        //     trailing: Text(
+        //       "看广告续签",
+        //       style: TextStyle(color: Colors.red),
+        //     ),
+        //     onTap: () async {
+        //       rewardedVideoAd();
+        //       RewardedVideoAd.instance.show().catchError((onError) {
+        //         Fluttertoast.showToast(
+        //             msg: "广告加载失败,请重试",
+        //             toastLength: Toast.LENGTH_SHORT,
+        //             gravity: ToastGravity.CENTER,
+        //             backgroundColor: Colors.red,
+        //             textColor: Colors.white,
+        //             timeInSecForIos: 2,
+        //             fontSize: 16.0);
+        //       });
+        //       RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
+        //           {String rewardType, int rewardAmount}) async {
+        //         switch (event) {
+        //           case RewardedVideoAdEvent.loaded:
+        //             // RewardedVideoAd.instance.show();
+        //             break;
+        //           case RewardedVideoAdEvent.failedToLoad:
+        //             Fluttertoast.showToast(
+        //                 msg: "广告加载失败,请联系管理员",
+        //                 toastLength: Toast.LENGTH_SHORT,
+        //                 gravity: ToastGravity.CENTER,
+        //                 backgroundColor: Colors.red,
+        //                 textColor: Colors.white,
+        //                 timeInSecForIos: 2,
+        //                 fontSize: 16.0);
+        //             //读取失败！
+        //             break;
+        //           case RewardedVideoAdEvent.opened:
+        //             break;
+        //           case RewardedVideoAdEvent.leftApplication:
+        //             break;
+        //           case RewardedVideoAdEvent.closed:
+        //             // Fluttertoast.showToast(
+        //             //     msg: "广告未看完,自动放弃获取VIP",
+        //             //     toastLength: Toast.LENGTH_SHORT,
+        //             //     gravity: ToastGravity.CENTER,
+        //             //     backgroundColor: Colors.red,
+        //             //     textColor: Colors.white,
+        //             //     timeInSecForIos: 2,
+        //             //     fontSize: 16.0);
+        //             rewardedVideoAd();
+        //             break;
+        //           case RewardedVideoAdEvent.rewarded:
+        //             // print("*********奖励 $rewardAmount");
+        //             await getVIP();
+        //             eventBus.fire(UserChangeEvent);
+        //             Fluttertoast.showToast(
+        //                 msg: "VIP续签成功",
+        //                 toastLength: Toast.LENGTH_SHORT,
+        //                 gravity: ToastGravity.CENTER,
+        //                 backgroundColor: Colors.red,
+        //                 textColor: Colors.white,
+        //                 timeInSecForIos: 2,
+        //                 fontSize: 16.0);
+        //             setState(() {
+        //               // currentUser.VIPEndTime
+        //               // currentUser.VIPEndTime =
+        //               //     DateTime.parse(currentUser.VIPEndTime)
+        //               //         .add(Duration(days: 1))
+        //               //         .toString();
+        //             });
+        //             break;
+        //           case RewardedVideoAdEvent.started:
+        //             break;
+        //           case RewardedVideoAdEvent.completed:
+        //             print("*********播放结束");
+        //             break;
+        //         }
+        //       };
+        //     }),
         new Divider(),
         new ListTile(
           title: new Text('我关注的人'),
@@ -210,10 +213,10 @@ class _DrawerWeigetState extends State<DrawerWeiget> {
           title: new Text('我创建的'),
           trailing: new Icon(Icons.arrow_right),
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => CreateVideosPage()));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => CreateVideosPage()));
           },
         ),
 
