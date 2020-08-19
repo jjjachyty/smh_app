@@ -58,36 +58,36 @@ Future<Response> addResources(VideoResources resources) async {
 Future<Map<String,List<VideoResources>>> getResources(Video movie) async {
   Map<String,List<VideoResources>> results = new Map<String,List<VideoResources>>(); 
  List<VideoResources> list;
-  if (movie.ID != null) {
-    var _resp = await movieResources(movie.ID);
-    if (_resp.State) {
-      list = _resp.Data as List<VideoResources>;
-    }
-  }
-  if (movie.DetailURL == null || movie.DetailURL == "") {
-     list.forEach((element) { 
-       results[element.Platform].add(element);
-     });
-     return results;
-  }
+  // if (movie.ID != null) {
+  //   var _resp = await movieResources(movie.ID);
+  //   if (_resp.State) {
+  //     list = _resp.Data as List<VideoResources>;
+  //   }
+  // }
+  // if (movie.DetailURL == null || movie.DetailURL == "") {
+  //    list.forEach((element) { 
+  //      results[element.Platform].add(element);
+  //    });
+  //    return results;
+  // }
 
   //从第三方来
   results = (await resources(movie.DetailURL));
-  if (list == null || list.length == 0) {
-    //本地没有 直接返回在线的
-    return results;
-  }
+  // if (list == null || list.length == 0) {
+  //   //本地没有 直接返回在线的
+  //   return results;
+  // }
   // var _tmp = new List<VideoResources>();
-  results.values.forEach((element) {
-    element.forEach((element1) { 
-      list.forEach((element2) { 
-        if (element1.Name == element2.Name){
-          element1 = element2;
-        }
-      });
+  // results.values.forEach((element) {
+  //   element.forEach((element1) { 
+  //     list.forEach((element2) { 
+  //       if (element1.Name == element2.Name){
+  //         element1 = element2;
+  //       }
+  //     });
       
-    });
-   });
+  //   });
+  //  });
   // list.addAll(_tmp);
   return results;
 }
