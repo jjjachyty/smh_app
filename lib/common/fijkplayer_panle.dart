@@ -349,6 +349,14 @@ class _DefaultFijkPanelState extends State<_DefaultFijkPanel> {
             player.seekTo(to < 0 ? 0 : to);
           }
         },
+        onLongPressStart: (detail) async {
+          if (player.state == FijkState.started) {
+            await player.setSpeed(2.0);
+          }
+        },
+        onLongPressEnd: (delati) async {
+          await player.setSpeed(1.0);
+        },
         child: AbsorbPointer(
           absorbing: _hideStuff,
           child: Column(
