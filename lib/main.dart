@@ -11,6 +11,7 @@ void main() async {
   // IjkConfig.isLog = true;
 //  IjkConfig.level = LogLevel.verbose;
   // await IjkManager.initIJKPlayer();
+      WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyApp());
 }
@@ -23,6 +24,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+
     init();
 
     super.initState();

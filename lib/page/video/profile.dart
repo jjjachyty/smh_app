@@ -24,6 +24,7 @@ import 'package:smh/page/video/play.dart';
 import 'package:smh/page/video/resources.dart';
 import 'package:smh/page/user/login.dart';
 import 'package:smh/page/user/profile/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'comment.dart';
 
@@ -57,10 +58,9 @@ class _VideoProfilePageState extends State<VideoProfilePage>
 
   void _listener() {
     eventBus.on<PlayMoieEvent>().listen((event) {
+      
       setState(() {
-        playResources = null;
-      });
-      setState(() {
+        // playResources = null;
         playResources = event.resources;
         playResources.VideoThumbnail = widget.movie.Cover;
       });
@@ -248,13 +248,18 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                     playResources = _tmp;
                   });
                 } else {
+                  
                   player.release();
                   setState(() {
                     playResources = null;
                   });
+                  if(Platform.isAndroid){
+                      launch(_tmp.URL,forceWebView: false);
+                  }else{
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return WebViewPage(_tmp.Name, _tmp.URL);
                   }));
+                }
                 }
               },
             );
@@ -284,7 +289,7 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                           player) //PlayPage(widget.movie, playResources)
                       : _profile(),
             ),
-            currentPlayURL.contains(".m3u8")
+            playResources?.Platform =="m3u8"
                 ? Container(
                     height: 30,
                     child: Row(
@@ -305,12 +310,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
+                              if(Platform.isAndroid){
+                      launch(_player1.URL + url);
+                  }else{
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return WebViewPage(
                                     "初始加载需等待", _player1.URL + url);
                               }));
-
+                  }
                               setState(() {
                                 playResources = null;
                               });
@@ -325,12 +333,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
+                               if(Platform.isAndroid){
+                      launch(_player1.URL + url);
+                  }else{
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return WebViewPage(
                                     "初始加载需要等待", _player2.URL + url);
                               }));
-
+                  }
                               setState(() {
                                 playResources = null;
                               });
@@ -345,11 +356,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
+                               if(Platform.isAndroid){
+                      launch(_player1.URL + url);
+                  }else{
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return WebViewPage(
                                     "初始加载需等待", _player3.URL + url);
                               }));
+                  }
                               setState(() {
                                 playResources = null;
                               });

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 
 import 'init.dart';
 
@@ -14,6 +17,9 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
+
+  
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -64,6 +70,7 @@ class _WebViewPageState extends State<WebViewPage> {
     // }
 
     // super.initState();
+    //  if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -72,25 +79,57 @@ class _WebViewPageState extends State<WebViewPage> {
         Completer<WebViewController>();
 
     print(widget.url);
+
+  //  X5Sdk.openWebActivity(widget.url,title: "web页面");
     return new Scaffold(
         appBar: new AppBar(
           title: Text(widget.title),
           backgroundColor: Colors.black,
         ),
-        body:
-     
-         WebView(
+        body: 
+     WebView(
 
           initialUrl: widget.url,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
+          
           userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
           gestureNavigationEnabled: true,
           
-        )
-        );
+         )
+        // InAppWebView(
+        //           initialUrl: widget.url,
+        //           initialHeaders: {
+        //           },
+        //           initialOptions: InAppWebViewGroupOptions(
+        //             crossPlatform: InAppWebViewOptions(
+        //                 debuggingEnabled: true,
+        //             )
+        //           ),
+        //           onWebViewCreated: (InAppWebViewController controller) {
+        //             webView = controller;
+        //           },
+        //           onLoadStart: (InAppWebViewController controller, String url) {
+        //             setState(() {
+        //               this.url = url;
+        //             });
+        //           },
+        //           onLoadStop: (InAppWebViewController controller, String url) async {
+        //             setState(() {
+        //               this.url = url;
+        //             });
+        //           },
+        //           onProgressChanged: (InAppWebViewController controller, int progress) {
+        //             setState(() {
+        //               this.progress = progress / 100;
+        //             });
+        //           },
+                
+        //         ),
+  
+         );
 
   // return WebviewScaffold(
   //           url: widget.url,
@@ -107,5 +146,7 @@ class _WebViewPageState extends State<WebViewPage> {
   //               child: Text('Waiting.....'),
   //             ),
   //           ),);
+
+  
    }
 }

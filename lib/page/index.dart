@@ -30,6 +30,22 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
   TabController controller;
   Key key = new UniqueKey();
 
+  @override
+  void dispose() {
+    interstitialAd.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // controller = new TabController(length: 1, vsync: this);
+
+    _listener();
+    // TODO: implement initState
+    super.initState();
+  }
+
   void _listener() {
     eventBus.on().listen((event) {
       switch (event.runtimeType.toString()) {
@@ -47,22 +63,6 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         default:
       }
     });
-  }
-
-  @override
-  void initState() {
-    // controller = new TabController(length: 1, vsync: this);
-
-    _listener();
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    interstitialAd.dispose();
-    // TODO: implement dispose
-    super.dispose();
   }
 
   @override
@@ -84,7 +84,7 @@ class _IndexPageState extends State<IndexPage> with TickerProviderStateMixin {
         title: Text.rich(TextSpan(
             text: "书名号",
             recognizer:
-                LongPressGestureRecognizer(duration: Duration(seconds: 5))
+                LongPressGestureRecognizer()
                   ..onLongPress = () async {
                     await setStorageBool("flag", true);
                     Fluttertoast.showToast(
