@@ -25,16 +25,19 @@ request_data(String url) async {
 }
 
 // 数据的解析
-Future<List<Video>> dsdSerach(String key,int page) async {
+Future<List<Video>> dsdSerach(String key, int page) async {
   List<Video> videos = new List();
-  var url = "https://www.yunsp.org/search.php?page="+page.toString()+"&searchword=" + key;
+  var url = "https://www.yunsp.org/search.php?page=" +
+      page.toString() +
+      "&searchword=" +
+      key;
 
   var html = await request_data(url);
   Document document = parse(html);
 
   // 这里使用css选择器语法提取数据
-  List<Element> list =
-      document.querySelectorAll('.myui-panel_bd .myui-vodlist__media .clearfix');
+  List<Element> list = document
+      .querySelectorAll('.myui-panel_bd .myui-vodlist__media .clearfix');
   for (var i = 0; i < list.length; i++) {
     Video movie = new Video();
 
@@ -60,14 +63,14 @@ Future<List<Video>> dsdSerach(String key,int page) async {
           movie.Years = _data[3];
           break;
         case 4:
-        if (ele.nodes[j].nodes.length ==2){
-    movie.DetailURL = "https://www.yunsp.org" +
-              ele.nodes[j].nodes[1].attributes["href"];
-              break;
-        }
+          if (ele.nodes[j].nodes.length == 2) {
             movie.DetailURL = "https://www.yunsp.org" +
+                ele.nodes[j].nodes[1].attributes["href"];
+            break;
+          }
+          movie.DetailURL = "https://www.yunsp.org" +
               ele.nodes[j].nodes[2].attributes["href"];
-      
+
           break;
         default:
       }
@@ -79,39 +82,39 @@ Future<List<Video>> dsdSerach(String key,int page) async {
 }
 
 // 数据的解析
-Future<Map<String,List<VideoResources>>> resources(String key) async {
-  Map<String,List<VideoResources>> resources = new Map();
+Future<Map<String, List<VideoResources>>> resources(String key) async {
+  Map<String, List<VideoResources>> resources = new Map();
   var html = await request_data(key);
   Document document = parse(html);
 
-
-  List<Element> nodePlatform =  document.querySelectorAll(".nav-tabs li");
+  List<Element> nodePlatform = document.querySelectorAll(".nav-tabs li");
   for (var platform in nodePlatform) {
-   var platformName = platform.text;
+    var platformName = platform.text;
     print(platform.nodes[0].attributes["href"]);
- 
-  // 这里使用css选择器语法提取数据
-  List<Element> nodes =  document.querySelectorAll(''+platform.nodes[0].attributes["href"]+' ul li');
-  //只取第一个
-  for (var nod in nodes) {
-    if (resources[platformName]==null){
-      resources[platformName] = List<VideoResources>();
+
+    // 这里使用css选择器语法提取数据
+    List<Element> nodes = document
+        .querySelectorAll('' + platform.nodes[0].attributes["href"] + ' ul li');
+    //只取第一个
+    for (var nod in nodes) {
+      if (resources[platformName] == null) {
+        resources[platformName] = List<VideoResources>();
+      }
+      resources[platformName].add(VideoResources(
+          Platform: platformName,
+          Name: nod.text,
+          URL: "https://www.yunsp.org" + nod.firstChild.attributes["href"]));
     }
-    resources[platformName].add(VideoResources(
-      Platform: platformName,
-        Name: nod.text,
-        URL: "https://www.yunsp.org" + nod.firstChild.attributes["href"]));
   }
-   }
   return resources;
 }
 
 // 数据的解析
 Future<String> getURL(String key) async {
   var html = await request_data(key);
-  var begin = html.toString().indexOf("now=base64decode(");
-  var end  = html.toString().indexOf("\");var pn=");
-  var m3u8URL=  base64Decode(html.toString().substring(begin+18,end));
+  var begin = html.toString().indexOf("now=unescape(");
+  var end = html.toString().indexOf("\");var pn=");
+  var m3u8URL = Uri.decodeComponent(html.toString().substring(begin + 14, end));
   // 这里使用css选择器语法提取数据
-  return String.fromCharCodes(m3u8URL);
+  return m3u8URL;
 }
