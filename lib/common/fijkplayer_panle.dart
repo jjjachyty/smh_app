@@ -26,6 +26,8 @@ import 'dart:math';
 import 'package:fijkplayer/fijkplayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dlna/flutter_dlna.dart';
+import 'package:smh/common/airplay.dart';
 
 /// Default builder generate default [FijkPanel] UI
 Widget FijkPanelBuilder(FijkPlayer player, FijkData data, BuildContext context,
@@ -300,6 +302,16 @@ class _DefaultFijkPanelState extends State<_DefaultFijkPanel> {
                 setState(() {
                   _speed = item;
                 });
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.airplay),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            AirPlayPage(this.widget.player.dataSource)));
               },
             ),
             IconButton(

@@ -43,6 +43,7 @@ dependencies:
       path: packages/zefyr/
   flutter_forbidshot: 0.0.2
   screen: 0.0.5
+  flutter_dlna: ^0.0.1+1
   # flutter_svg: ^0.17.3+1
   # fijkplayer:
   #   git:
