@@ -37,13 +37,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     _timer.cancel();
-    if (newestVersion.VersionCode != currentVersion) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => VersionPage()));
-    } else {
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => IndexPage()));
-    }
+    // if (newestVersion.VersionCode != currentVersion) {
+    // Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(builder: (BuildContext context) => VersionPage()));
+    // } else {
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (BuildContext context) => IndexPage()));
+    // }
   }
 
   @override
@@ -55,22 +55,48 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return new Stack(
-      alignment: const Alignment(1.0, -1.0), // 右上角对齐
+      // alignment: Alignment.center, // 右上角对齐
       children: [
-        new ConstrainedBox(
-            constraints: BoxConstraints.expand(),
-            child: new CachedNetworkImage(
-              fit: BoxFit.fill,
-              imageUrl: "http://smh.apcchis.com/splashscreens.jpg",
-              // placeholder: (context, url) => Container(
-              //   color: Colors.white,
-              //   child: Image.asset("images/logo.png"),
-              // ),
-              errorWidget: (context, url, error) => new Icon(Icons.error),
-            )),
+        Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          color: Color.fromARGB(255, 252, 104, 143),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/nhdz.jpg",
+                width: 100,
+                height: 100,
+              ),
+              Text(
+                "滴～ 滴 滴",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    decoration: TextDecoration.none),
+              ),
+              Text(
+                "《书名号》",
+                style: TextStyle(
+                    color: Colors.white, decoration: TextDecoration.none),
+              ),
+              Text(
+                "Q群:1091923826",
+                style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.white,
+                    decoration: TextDecoration.none),
+              ),
+            ],
+          ),
+        ),
         new Padding(
           padding: new EdgeInsets.fromLTRB(
-              0.0, MediaQuery.of(context).size.height * 0.7, 10.0, 0.0),
+              MediaQuery.of(context).size.width - 100,
+              MediaQuery.of(context).size.height * 0.7,
+              0.0,
+              0.0),
           child: new FlatButton(
             onPressed: () {
               navigationPage();
@@ -78,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
 //            padding: EdgeInsets.all(0.0),
             color: Colors.transparent,
             child: new Text(
-              "$count 跳过广告",
+              "$count 点击跳过",
               style: new TextStyle(color: Colors.white, fontSize: 12.0),
             ),
           ),

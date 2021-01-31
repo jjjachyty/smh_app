@@ -26,6 +26,8 @@ import 'dart:math';
 import 'package:fijkplayer/fijkplayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dlna/flutter_dlna.dart';
+import 'package:smh/common/airplay.dart';
 
 /// Default builder generate default [FijkPanel] UI
 Widget FijkPanelBuilder(FijkPlayer player, FijkData data, BuildContext context,
@@ -303,6 +305,17 @@ class _DefaultFijkPanelState extends State<_DefaultFijkPanel> {
               },
             ),
             IconButton(
+              icon: Icon(Icons.airplay),
+              onPressed: () {
+                this.player.pause();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            AirPlayPage(this.widget.player.dataSource)));
+              },
+            ),
+            IconButton(
               icon: Icon(
                 widget.player.value.fullScreen
                     ? Icons.fullscreen_exit
@@ -348,6 +361,14 @@ class _DefaultFijkPanelState extends State<_DefaultFijkPanel> {
             var to = current - Duration(seconds: 60).inMilliseconds;
             player.seekTo(to < 0 ? 0 : to);
           }
+        },
+        onLongPressStart: (detail) async {
+          if (player.state == FijkState.started) {
+            await player.setSpeed(2.0);
+          }
+        },
+        onLongPressEnd: (delati) async {
+          await player.setSpeed(1.0);
         },
         child: AbsorbPointer(
           absorbing: _hideStuff,

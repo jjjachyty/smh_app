@@ -1,4 +1,4 @@
-import 'package:firebase_admob/firebase_admob.dart';
+// import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:oktoast/oktoast.dart';
@@ -11,6 +11,7 @@ void main() async {
   // IjkConfig.isLog = true;
 //  IjkConfig.level = LogLevel.verbose;
   // await IjkManager.initIJKPlayer();
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyApp());
 }
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
-      theme: ThemeData(primaryColor: Colors.red),
+      theme: ThemeData(primaryColor: Colors.pinkAccent),
       themeMode: ThemeMode.system,
     );
   }

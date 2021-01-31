@@ -60,47 +60,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   //推薦
   @override
   Widget buildSuggestions(BuildContext context) {
-    return FutureBuilder(
-      future: movieRecommend(),
-      builder: (context, shot) {
-        if (shot.hasData) {
-          var videos = shot.data.Data as List<Video>;
-          return ListView.builder(
-              itemCount: videos.length,
-              itemBuilder: (context, index) => ListTile(
-                    onTap: () {
-                      query = videos[index].Name;
-                    },
-                    title: Text(
-                      videos[index].Name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    trailing: Text(
-                        formatDate(
-                                DateTime.parse(videos[index].CreateAt)
-                                    .toLocal(),
-                                [
-                                  yyyy,
-                                  "/",
-                                  mm,
-                                  "/",
-                                  dd,
-                                  " ",
-                                  HH,
-                                  ":",
-                                  nn,
-                                  ":",
-                                  ss
-                                ]) +
-                            "有人看过",
-                        style: TextStyle(
-                            color: Colors.yellow.shade900, fontSize: 10)),
-                  ));
-        } else {
-          return Text("data");
-        }
-      },
-    );
+    return ListTile(subtitle: Text("如不能搜索到电影,请咨询Q群1091923826"),);
 
     // TODO: implement buildSuggestions
   }

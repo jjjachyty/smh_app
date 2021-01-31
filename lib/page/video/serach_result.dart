@@ -160,17 +160,17 @@ class _SerachResultPageState extends State<SerachResultPage> {
               return GestureDetector(
                 child: _item(videos[index]),
                 onTap: () async {
-                  if (currentUser == null) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return LoginPage();
-                    }));
-                  } else {
+                  // if (currentUser == null) {
+                  //   Navigator.push(context,
+                  //       MaterialPageRoute(builder: (context) {
+                  //     return LoginPage();
+                  //   }));
+                  // } else {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
                       return VideoProfilePage(videos[index]);
                     }));
-                  }
+                  // }
                 },
               );
             },

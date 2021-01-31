@@ -38,24 +38,6 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
 
     //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_file_path",“/storage/emulated/0/1.tmp");每首歌的临时文件名自己根据自己需要生成就行了。
     //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_map_path",“/storage/emulated/0/2.tmp"");//暂时不知道设置有什么用
-
-    _playInput();
-    widget.player.onCurrentPosUpdate.listen((v) {
-      if (v.inSeconds % 30 == 0) {
-        //30S更新一次
-        var history = WatchingHistory(
-          UserID: currentUser.ID,
-          VideoID: widget.resources.VideoID,
-          VideoName: widget.movie.Name,
-          ResourcesID: widget.resources.ID,
-          ResourcesName: widget.resources.Name,
-          VideoDuration: widget.player.value.duration.inMinutes.toDouble(),
-          Progress: v.inSeconds.toDouble(),
-          VideoThumbnail: widget.movie.Cover,
-        );
-        updateWatch(history);
-      }
-    });
   }
 
   @override
@@ -105,51 +87,29 @@ class _FijkPlayPageState extends State<FijkPlayPage> {
     );
   }
 
-  void _checkHasWathcing() async {
-    var history = WatchingHistory(
-      UserID: currentUser.ID ?? "",
-      VideoID: widget.resources.VideoID,
-      VideoName: widget.movie.Name,
-      ResourcesID: widget.resources.ID,
-      ResourcesName: widget.resources.Name,
-      VideoDuration: widget.player.value.duration.inMinutes.toDouble(),
-      VideoThumbnail: widget.movie.Cover,
-    );
-    var resp = await getResourceWatch(history);
-    if (resp.State) {
-      var _result = WatchingHistory.fromJson(resp.Data);
-      if (_result.Progress > 0) {
-        widget.player.seekTo((_result.Progress * 1000).toInt());
-      }
-    }
-  }
+  // void _playInput() async {
+  //   print(widget.resources.URL);
+  //   // await widget.player.setDataSource(
+  //   //   widget.resources.URL,
+  //   //   autoPlay: true,
+  //   //   showCover: true,
+  //   // );
 
-  void _playInput() async {
-    print(widget.resources.URL);
-    // await widget.player.setDataSource(
-    //   widget.resources.URL,
-    //   autoPlay: true,
-    //   showCover: true,
-    // );
+  //   await widget.player
+  //       .setOption(FijkOption.hostCategory, "request-screen-on", 1);
 
-    await widget.player
-        .setOption(FijkOption.hostCategory, "request-screen-on", 1);
-
-    if (widget.movie.ID == null || widget.movie.ID == "") {
-      widget.movie.CreateBy = currentUser != null ? currentUser.ID : "";
-      print(widget.movie.CreateBy);
-      var _resp = await movieAdd(widget.movie);
-      if (_resp.State) {
-        var res = widget.resources;
-        var moveResult = Video.fromJson(_resp.Data);
-        res.VideoID = moveResult.ID;
-        res.VideoThumbnail = moveResult.Cover;
-        res.State = true;
-        await addResources(res);
-      }
-    }
-    if (currentUser != null) {
-      _checkHasWathcing();
-    }
-  }
+  //   if (widget.movie.ID == null || widget.movie.ID == "") {
+  //     // widget.movie.CreateBy = currentUser != null ? currentUser.ID : "";
+  //     print(widget.movie.CreateBy);
+  //     var _resp = await movieAdd(widget.movie);
+  //     if (_resp.State) {
+  //       var res = widget.resources;
+  //       var moveResult = Video.fromJson(_resp.Data);
+  //       res.VideoID = moveResult.ID;
+  //       res.VideoThumbnail = moveResult.Cover;
+  //       res.State = true;
+  //       await addResources(res);
+  //     }
+  //   }
+  // }
 }

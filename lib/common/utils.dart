@@ -16,9 +16,18 @@ Future<String> getStorageString(String key) async {
   return prefs.getString(key);
 }
 
+Future<bool> getStorageBool(String key) async {
+  return prefs.getBool(key);
+}
+
 Future<bool> setStorageString(String key, val) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.setString(key, val);
+}
+
+Future<bool> setStorageBool(String key, val) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setBool(key, val);
 }
 
 Future<bool> removeStorage(String key) async {
@@ -51,13 +60,13 @@ double toDouble(String val) {
   return _db;
 }
 
-bool checkHasVIP() {
-  var expDt = DateTime.parse(currentUser.VIPEndTime);
-  if (DateTime.now().isBefore(expDt)) {
-    return true;
-  }
-  return false;
-}
+// bool checkHasVIP() {
+//   var expDt = DateTime.parse(currentUser.VIPEndTime);
+//   if (DateTime.now().isBefore(expDt)) {
+//     return true;
+//   }
+//   return false;
+// }
 
 Future<String> findLocalPath() async {
   final directory = Platform.isAndroid
