@@ -251,15 +251,14 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                   setState(() {
                     playResources = null;
                   });
-                  if (Platform.isAndroid) {
-                    launch(_tmp.URL, forceWebView: false);
-                  } else {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return WebViewPage(_tmp.Name, _tmp.URL);
-                    }));
-                  }
+                  // if (Platform.isAndroid) {
+                  //   launch(_tmp.URL, forceWebView: false);
+                  // } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return WebViewPage(_tmp.Name, _tmp.URL);
+                  }));
                 }
+                // }
               },
             );
           });
@@ -309,15 +308,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
-                              if (Platform.isAndroid) {
-                                launch(_player1.URL + url);
-                              } else {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return WebViewPage(
-                                      "初始加载需等待", _player1.URL + url);
-                                }));
-                              }
+                              // if (Platform.isAndroid) {
+                              //   launch(_player1.URL + url);
+                              // } else {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return WebViewPage(
+                                    "初始加载需等待", _player1.URL + url);
+                              }));
+                              // }
                               setState(() {
                                 playResources = null;
                               });
@@ -332,15 +331,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
-                              if (Platform.isAndroid) {
-                                launch(_player1.URL + url);
-                              } else {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return WebViewPage(
-                                      "初始加载需要等待", _player2.URL + url);
-                                }));
-                              }
+                              // if (Platform.isAndroid) {
+                              //   launch(_player1.URL + url);
+                              // } else {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return WebViewPage(
+                                    "初始加载需要等待", _player2.URL + url);
+                              }));
+                              // }
                               setState(() {
                                 playResources = null;
                               });
@@ -355,15 +354,15 @@ class _VideoProfilePageState extends State<VideoProfilePage>
                               player.release();
                               var url = playResources.URL;
                               //https://www.044416.com/parse392/player/dplayer/?live=0&autoplay=0&url=
-                              if (Platform.isAndroid) {
-                                launch(_player1.URL + url);
-                              } else {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return WebViewPage(
-                                      "初始加载需等待", _player3.URL + url);
-                                }));
-                              }
+                              // if (Platform.isAndroid) {
+                              //   launch(_player1.URL + url);
+                              // } else {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return WebViewPage(
+                                    "初始加载需等待", _player3.URL + url);
+                              }));
+                              // }
                               setState(() {
                                 playResources = null;
                               });

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-
 import 'init.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -17,9 +16,6 @@ class WebViewPage extends StatefulWidget {
 }
 
 class _WebViewPageState extends State<WebViewPage> {
-
-  
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -49,6 +45,8 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
     // if (widget.movie.ID == null || widget.movie.ID == "") {
     //   movieAdd(widget.movie).then((_resp) {
     //     print(_resp);
@@ -74,31 +72,28 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   @override
-   Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     final Completer<WebViewController> _controller =
         Completer<WebViewController>();
 
     print(widget.url);
 
-  //  X5Sdk.openWebActivity(widget.url,title: "web页面");
+    //  X5Sdk.openWebActivity(widget.url,title: "web页面");
     return new Scaffold(
         appBar: new AppBar(
           title: Text(widget.title),
           backgroundColor: Colors.black,
         ),
-        body: 
-     WebView(
-
+        body: WebView(
           initialUrl: widget.url,
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
-          
-          userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
+          userAgent:
+              "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1",
           gestureNavigationEnabled: true,
-          
-         )
+        )
         // InAppWebView(
         //           initialUrl: widget.url,
         //           initialHeaders: {
@@ -126,27 +121,25 @@ class _WebViewPageState extends State<WebViewPage> {
         //               this.progress = progress / 100;
         //             });
         //           },
-                
+
         //         ),
-  
-         );
 
-  // return WebviewScaffold(
-  //           url: widget.url,
-  //           mediaPlaybackRequiresUserGesture: false,
-  //           appBar: AppBar(
-  //          title: Text(widget.title),
-  //           ),
-  //           withZoom: true,
-  //           withLocalStorage: true,
-  //           hidden: true,
-  //           initialChild: Container(
-  //             color: Colors.redAccent,
-  //             child: const Center(
-  //               child: Text('Waiting.....'),
-  //             ),
-  //           ),);
+        );
 
-  
-   }
+    // return WebviewScaffold(
+    //           url: widget.url,
+    //           mediaPlaybackRequiresUserGesture: false,
+    //           appBar: AppBar(
+    //          title: Text(widget.title),
+    //           ),
+    //           withZoom: true,
+    //           withLocalStorage: true,
+    //           hidden: true,
+    //           initialChild: Container(
+    //             color: Colors.redAccent,
+    //             child: const Center(
+    //               child: Text('Waiting.....'),
+    //             ),
+    //           ),);
+  }
 }

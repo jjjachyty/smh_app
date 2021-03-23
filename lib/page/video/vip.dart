@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,6 +26,8 @@ class _VipVideoPageState extends State<VipVideoPage> {
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
     super.initState();
     Future.delayed(Duration(seconds: 1), () {
       showDialog(
@@ -57,7 +60,6 @@ class _VipVideoPageState extends State<VipVideoPage> {
 
   @override
   Widget build(BuildContext context) {
- 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
