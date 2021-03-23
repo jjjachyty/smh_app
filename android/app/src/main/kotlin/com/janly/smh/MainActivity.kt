@@ -1,4 +1,4 @@
-package com.example.smh_app
+package com.janly.smh
 
 import io.flutter.embedding.android.FlutterActivity
 
